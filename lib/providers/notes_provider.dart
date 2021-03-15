@@ -177,6 +177,7 @@ class NotesProvider extends GetxController {
 
   Future<void> searchNotes(String searchString) async {
     try {
+      _searchedNotes = [];
       _state = NotesState.SEARCHING;
       update();
 
