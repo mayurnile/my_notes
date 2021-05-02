@@ -52,5 +52,18 @@ class MyNotesTheme {
         borderRadius: BorderRadius.circular(4.0),
       ),
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        primary: PRIMARY_COLOR,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        elevation: 0.0,
+        textStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+      ),
+    ),
   );
 }

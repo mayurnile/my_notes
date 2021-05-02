@@ -178,10 +178,8 @@ class SignupScreen extends StatelessWidget {
                   ? Center(
                       child: CircularProgressIndicator(),
                     )
-                  : RaisedButton(
+                  : ElevatedButton(
                       onPressed: () => _signup(_authProvider),
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
                       child: Text(
                         'Signup',
                         style:

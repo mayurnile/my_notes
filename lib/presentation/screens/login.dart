@@ -153,10 +153,8 @@ class LoginScreen extends StatelessWidget {
                   ? Center(
                       child: CircularProgressIndicator(),
                     )
-                  : RaisedButton(
+                  : ElevatedButton(
                       onPressed: () => _login(_authProvider),
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
                       child: Text(
                         'Login',
                         style:

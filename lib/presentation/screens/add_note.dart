@@ -198,11 +198,11 @@ class _AddNotescreenState extends State<AddNotescreen> {
             ? _imagePath == null
                 ? SizedBox(
                     width: (screenSize.width / 2) - 32.0,
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       onPressed: _pickImage,
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      color: MyNotesTheme.CARD_COLOR,
-                      elevation: 0,
+                      style: ElevatedButton.styleFrom(
+                        primary: MyNotesTheme.CARD_COLOR,
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -223,11 +223,11 @@ class _AddNotescreenState extends State<AddNotescreen> {
                   )
                 : SizedBox(
                     width: (screenSize.width / 2) - 32.0,
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       onPressed: _removeImage,
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      color: MyNotesTheme.CARD_COLOR,
-                      elevation: 0,
+                      style: ElevatedButton.styleFrom(
+                        primary: MyNotesTheme.CARD_COLOR,
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -249,11 +249,11 @@ class _AddNotescreenState extends State<AddNotescreen> {
             : _image == null
                 ? SizedBox(
                     width: (screenSize.width / 2) - 32.0,
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       onPressed: _pickImage,
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      color: MyNotesTheme.CARD_COLOR,
-                      elevation: 0,
+                      style: ElevatedButton.styleFrom(
+                        primary: MyNotesTheme.CARD_COLOR,
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -274,11 +274,11 @@ class _AddNotescreenState extends State<AddNotescreen> {
                   )
                 : SizedBox(
                     width: (screenSize.width / 2) - 32.0,
-                    child: RaisedButton(
+                    child: ElevatedButton(
                       onPressed: _removeImage,
-                      padding: const EdgeInsets.symmetric(vertical: 12.0),
-                      color: MyNotesTheme.CARD_COLOR,
-                      elevation: 0,
+                      style: ElevatedButton.styleFrom(
+                        primary: MyNotesTheme.CARD_COLOR,
+                      ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -304,10 +304,8 @@ class _AddNotescreenState extends State<AddNotescreen> {
               )
             : SizedBox(
                 width: (screenSize.width / 2) - 32.0,
-                child: RaisedButton(
+                child: ElevatedButton(
                   onPressed: _saveNote,
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  elevation: 0,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,

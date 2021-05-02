@@ -13,34 +13,41 @@ dependencies:
     sdk: flutter
 
   #State Management
-  get: ^3.26.0
+  get: ^4.1.4
 
   #architecture
-  get_it: ^4.0.4
+  get_it: ^6.1.1
   
   #firebase
-  firebase_auth:
-  cloud_firestore: 
-  firebase_storage:
-  firebase_dynamic_links:
+  firebase_auth: ^1.1.2
+  cloud_firestore: ^1.0.7
+  firebase_storage: ^8.0.5
+  firebase_dynamic_links: ^2.0.2
 
   #UI
-  cupertino_icons: ^1.0.0
-  flutter_svg: 0.18.0
-  fluttertoast:
-  image_picker:
-  intl: ^0.16.0
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^0.22.0 
+  fluttertoast: ^8.0.6
+  image_picker: ^0.7.4
+  intl: ^0.17.0
   
   #sharing
-  share:
+  share: ^2.0.1
 
   #others
-  path_provider:
-  http:
+  path_provider: ^2.0.1
+  http: ^0.13.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_launcher_icons: ^0.9.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/app_logo.png"
 
 flutter:
 

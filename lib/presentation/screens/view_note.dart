@@ -123,7 +123,7 @@ class ViewNoteScreen extends StatelessWidget {
   Widget _buildActions(Size screenSize, TextTheme textTheme) {
     return SizedBox(
       width: screenSize.width,
-      child: RaisedButton(
+      child: ElevatedButton(
         onPressed: () async {
           NotesProvider _notesProvider = Get.find();
           File image;
@@ -135,8 +135,6 @@ class ViewNoteScreen extends StatelessWidget {
 
           locator.get<NavigationService>().navigateBack();
         },
-        elevation: 0,
-        padding: const EdgeInsets.symmetric(vertical: 12.0),
         child: Text(
           'Add to My Note',
           style: textTheme.headline4.copyWith(color: Colors.white),
@@ -150,7 +148,7 @@ class ViewNoteScreen extends StatelessWidget {
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
     File file = new File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
-    http.Response response = await http.get(imageUrl);
+    http.Response response = await http.get(Uri.parse(imageUrl));
     await file.writeAsBytes(response.bodyBytes);
     return file;
   }
