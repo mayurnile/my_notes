@@ -30,7 +30,7 @@ class SearchField extends StatelessWidget {
           Flexible(
             child: TextField(
               onChanged: (String value) =>
-                  _notesProvider.searchNotes(value.trim()),
+                  _notesProvider.searchNotes(searchString: value.trim()),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Search Notes',

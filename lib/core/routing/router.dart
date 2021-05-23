@@ -10,7 +10,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case '/':
       AuthProvider _authProvider = Get.find();
-      User user = _authProvider.firebaseAuth.currentUser;
+      User? user = _authProvider.firebaseAuth.currentUser;
       if (user != null) {
         return _getPageRoute(HomeScreen(), settings);
       }
@@ -22,7 +22,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case HOME_ROUTE:
       return _getPageRoute(HomeScreen(), settings);
     case ADD_NOTE_ROUTE:
-      final Map<String, dynamic> args = settings.arguments;
+      final Map<String, dynamic> args =
+          settings.arguments as Map<String, dynamic>;
       if (args['isEdit'])
         return _getPageRoute(
           AddNotescreen(
@@ -35,30 +36,29 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         AddNotescreen(isEdit: false),
         settings,
       );
-      break;
     case VIEW_NOTE_ROUTE:
-      final Map<String, dynamic> args = settings.arguments;
+      final Map<String, dynamic> args =
+          settings.arguments as Map<String, dynamic>;
       return _getPageRoute(
         ViewNoteScreen(
           viewNote: args['note'],
         ),
         settings,
       );
-      break;
     default:
       return _getPageRoute(LoginScreen(), settings);
   }
 }
 
 PageRoute _getPageRoute(Widget child, RouteSettings settings) {
-  return _FadeRoute(child: child, routeName: settings.name);
+  return _FadeRoute(child: child, routeName: settings.name!);
 }
 
 class _FadeRoute extends PageRouteBuilder {
   final Widget child;
   final String routeName;
 
-  _FadeRoute({this.child, this.routeName})
+  _FadeRoute({required this.child, required this.routeName})
       : super(
           settings: RouteSettings(name: routeName),
           pageBuilder: (BuildContext context, Animation<double> animation,

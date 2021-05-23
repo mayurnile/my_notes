@@ -12,11 +12,11 @@ import '../core/models/models.dart';
 import '../providers/providers.dart';
 
 class NotesProvider extends GetxController {
-  FirebaseFirestore _firestore;
-  FirebaseStorage _firebaseStorage;
-  List<Note> _myNotes = [];
-  List<Note> _searchedNotes = [];
-  NotesState _state;
+  late FirebaseFirestore _firestore;
+  late FirebaseStorage _firebaseStorage;
+  List<Note>? _myNotes = [];
+  List<Note>? _searchedNotes = [];
+  late NotesState _state;
 
   @override
   void onInit() {
@@ -46,22 +46,22 @@ class NotesProvider extends GetxController {
     update();
 
     try {
-      CollectionReference collectionReference =
+      CollectionReference? collectionReference =
           _firestore.collection('users').doc('$userId').collection('notes');
 
-      QuerySnapshot queryData = await collectionReference.get();
+      QuerySnapshot? queryData = await collectionReference.get();
 
       if (queryData.docs.length == 0) {
         _state = NotesState.NONOTES;
         update();
       } else {
         queryData.docs.forEach((snapshot) {
-          Map<String, dynamic> data = snapshot.data();
-          Note myNote = Note.fromJSON(data, snapshot.id);
-          _myNotes.add(myNote);
+          Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>;
+          Note? myNote = Note.fromJSON(data, snapshot.id);
+          _myNotes!.add(myNote);
         });
 
-        _myNotes.sort((a, b) => a.createdTime.isAfter(b.createdTime) ? 0 : 1);
+        _myNotes!.sort((a, b) => a.createdTime.isAfter(b.createdTime) ? 0 : 1);
         _state = NotesState.LOADED;
         update();
       }
@@ -71,25 +71,33 @@ class NotesProvider extends GetxController {
     }
   }
 
-  Future<bool> createNewNote(
-    String title,
-    String description,
-    File image,
-  ) async {
+  ///[Method for Creating a New Note]
+  Future<bool> createNewNote({
+    required String title,
+    required String description,
+    File? image,
+  }) async {
     AuthProvider _authProvider = Get.find();
-    User user = _authProvider.firebaseAuth.currentUser;
-    String userId = user.uid;
+    User? user = _authProvider.firebaseAuth.currentUser;
+    String? userId = '';
+    if (user != null) {
+      userId = user.uid;
+    } else {
+      return false;
+    }
+
     try {
-      String imageUrl;
-      if (image != null) {
-        imageUrl = await _uploadFile(image, userId);
-      }
+      String imageUrl = '';
+
+      if (image != null)
+        imageUrl = await _uploadFile(image: image, userId: userId);
 
       DocumentReference userDocument =
           _firestore.collection('users').doc('$userId');
 
       List<String> _searchParameters = [];
       String temp = "";
+
       for (int i = 0; i < title.trim().length; i++) {
         temp += title[i];
         _searchParameters.add(temp);
@@ -111,10 +119,16 @@ class NotesProvider extends GetxController {
     }
   }
 
-  Future<bool> removeNote(String noteId) async {
+  ///[Method for Removing a Note]
+  Future<bool> removeNote({required String noteId}) async {
     AuthProvider _authProvider = Get.find();
-    User user = _authProvider.firebaseAuth.currentUser;
-    String userId = user.uid;
+    User? user = _authProvider.firebaseAuth.currentUser;
+    String? userId = '';
+    if (user != null) {
+      userId = user.uid;
+    } else {
+      return false;
+    }
 
     try {
       DocumentReference userDocument = _firestore
@@ -131,22 +145,28 @@ class NotesProvider extends GetxController {
     }
   }
 
-  Future<bool> editNote(Note editedNote, File image) async {
+  ///[Method for Editing Note]
+  Future<bool> editNote({required Note editedNote, File? image}) async {
     AuthProvider _authProvider = Get.find();
-    User user = _authProvider.firebaseAuth.currentUser;
-    String userId = user.uid;
+    User? user = _authProvider.firebaseAuth.currentUser;
+    String? userId = '';
+    if (user != null) {
+      userId = user.uid;
+    } else {
+      return false;
+    }
 
     try {
-      DocumentReference userDocument = _firestore
+      DocumentReference? userDocument = _firestore
           .collection('users')
           .doc('$userId')
           .collection('notes')
           .doc('${editedNote.id}');
 
-      String imageUrl;
+      String? imageUrl;
       if (image != null) {
-        imageUrl = await _uploadFile(image, userId);
-      } else if (editedNote.imagePath != null) {
+        imageUrl = await _uploadFile(image: image, userId: userId);
+      } else {
         imageUrl = editedNote.imagePath;
       }
 
@@ -175,15 +195,26 @@ class NotesProvider extends GetxController {
     }
   }
 
-  Future<void> searchNotes(String searchString) async {
+  ///[Method for Seaching in Notes]
+  Future<void> searchNotes({required String searchString}) async {
     try {
       _searchedNotes = [];
       _state = NotesState.SEARCHING;
       update();
 
+      if (searchString.length == 0) {
+        _state = NotesState.LOADED;
+        update();
+        return;
+      }
       AuthProvider _authProvider = Get.find();
-      User user = _authProvider.firebaseAuth.currentUser;
-      String userId = user.uid;
+      User? user = _authProvider.firebaseAuth.currentUser;
+      String? userId = '';
+      if (user != null) {
+        userId = user.uid;
+      } else {
+        return;
+      }
 
       List<DocumentSnapshot> documentList = (await _firestore
               .collection('users')
@@ -198,12 +229,12 @@ class NotesProvider extends GetxController {
         update();
       } else {
         documentList.forEach((snapshot) {
-          Map<String, dynamic> data = snapshot.data();
+          Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>;
           Note myNote = Note.fromJSON(data, snapshot.id);
-          _searchedNotes.add(myNote);
+          _searchedNotes!.add(myNote);
         });
 
-        _myNotes.sort((a, b) => a.createdTime.isAfter(b.createdTime) ? 0 : 1);
+        _myNotes!.sort((a, b) => a.createdTime.isAfter(b.createdTime) ? 0 : 1);
         _state = NotesState.SEARCHED;
         update();
       }
@@ -213,10 +244,16 @@ class NotesProvider extends GetxController {
     }
   }
 
-  Future<Uri> shareNote(String noteID) async {
+  ///[Method for Sharing Note]
+  Future<Uri> shareNote({required String noteID}) async {
     AuthProvider _authProvider = Get.find();
-    User user = _authProvider.firebaseAuth.currentUser;
-    String userId = user.uid;
+    User? user = _authProvider.firebaseAuth.currentUser;
+    String? userId = '';
+    if (user != null) {
+      userId = user.uid;
+    } else {
+      throw Exception;
+    }
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://mynotess.page.link',
@@ -232,18 +269,21 @@ class NotesProvider extends GetxController {
     return dynamicUrl;
   }
 
+  ///[Method for displaying visited link]
   Future<void> retrieveDynamicLink(BuildContext context) async {
     try {
-      final PendingDynamicLinkData data =
+      final PendingDynamicLinkData? data =
           await FirebaseDynamicLinks.instance.getInitialLink();
-      final Uri deepLink = data?.link;
+      final Uri? deepLink = data?.link;
 
       if (deepLink != null) {
         if (deepLink.queryParameters.containsKey('id')) {
-          String senderID = deepLink.queryParameters['id'];
-          String noteID = deepLink.queryParameters['noteId'];
+          String? senderID = deepLink.queryParameters['id'];
+          String? noteID = deepLink.queryParameters['noteId'];
 
-          Note fetchedNote = await fetchNoteById(senderID, noteID);
+          Note? fetchedNote;
+          if (senderID != null && noteID != null)
+            fetchedNote = await fetchNoteById(userId: senderID, noteId: noteID);
 
           locator.get<NavigationService>().navigateToNamed(
             VIEW_NOTE_ROUTE,
@@ -254,18 +294,23 @@ class NotesProvider extends GetxController {
       }
 
       FirebaseDynamicLinks.instance.onLink(onSuccess: (
-        PendingDynamicLinkData dynamicLink,
+        PendingDynamicLinkData? dynamicLink,
       ) async {
-        if (dynamicLink.link.queryParameters.containsKey('id')) {
-          String senderID = dynamicLink.link.queryParameters['id'];
-          String noteID = dynamicLink.link.queryParameters['noteId'];
+        if (dynamicLink!.link.queryParameters.containsKey('id')) {
+          String? senderID = dynamicLink.link.queryParameters['id'];
+          String? noteID = dynamicLink.link.queryParameters['noteId'];
+          Note? fetchedNote;
 
-          Note fetchedNote = await fetchNoteById(senderID, noteID);
+          if (senderID != null && noteID != null)
+            fetchedNote = await fetchNoteById(userId: senderID, noteId: noteID);
 
-          locator.get<NavigationService>().navigateToNamed(
-            VIEW_NOTE_ROUTE,
-            arguments: {'note': fetchedNote},
-          );
+          if (fetchedNote != null)
+            locator.get<NavigationService>().navigateToNamed(
+              VIEW_NOTE_ROUTE,
+              arguments: {'note': fetchedNote},
+            );
+          else
+            throw Exception;
         }
       });
     } catch (e) {
@@ -273,16 +318,23 @@ class NotesProvider extends GetxController {
     }
   }
 
-  Future<Note> fetchNoteById(String userId, String noteId) async {
+  ///[Method to fetch a specific note by it's ID]
+  Future<Note?> fetchNoteById(
+      {required String userId, required String noteId}) async {
     try {
-      DocumentSnapshot documentSnapshot = await _firestore
+      DocumentSnapshot? documentSnapshot = await _firestore
           .collection('users')
           .doc('$userId')
           .collection('notes')
           .doc('$noteId')
           .get();
 
-      Note fetchedNote = Note.fromJSON(documentSnapshot.data(), noteId);
+      Note? fetchedNote;
+      if (documentSnapshot.data() != null) {
+        Map<String, dynamic>? data =
+            documentSnapshot.data() as Map<String, dynamic>?;
+        fetchedNote = Note.fromJSON(data!, noteId);
+      }
 
       return fetchedNote;
     } catch (_) {
@@ -290,12 +342,14 @@ class NotesProvider extends GetxController {
     }
   }
 
-  Future<String> _uploadFile(File _image, String userId) async {
+  ///[Method for uploading file to storage]
+  Future<String> _uploadFile(
+      {required File image, required String userId}) async {
     String returnURL;
     Reference storageReference = _firebaseStorage
         .ref()
-        .child('images/$userId/${_image.path.split('/').last}');
-    UploadTask uploadTask = storageReference.putFile(_image);
+        .child('images/$userId/${image.path.split('/').last}');
+    UploadTask uploadTask = storageReference.putFile(image);
     await uploadTask;
     returnURL = await storageReference.getDownloadURL();
     return returnURL;

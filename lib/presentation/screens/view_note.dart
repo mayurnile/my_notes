@@ -15,8 +15,8 @@ class ViewNoteScreen extends StatelessWidget {
   final Note viewNote;
 
   ViewNoteScreen({
-    Key key,
-    @required this.viewNote,
+    Key? key,
+    required this.viewNote,
   });
 
   @override
@@ -95,7 +95,7 @@ class ViewNoteScreen extends StatelessWidget {
         //description
         Text(
           viewNote.description,
-          style: textTheme.headline5.copyWith(
+          style: textTheme.headline5!.copyWith(
             color: Colors.black.withOpacity(0.5),
           ),
         ),
@@ -110,7 +110,7 @@ class ViewNoteScreen extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: Image.network(
-                viewNote.imagePath,
+                viewNote.imagePath!,
                 width: screenSize.width,
                 height: screenSize.height * 0.3,
                 fit: BoxFit.cover,
@@ -126,18 +126,21 @@ class ViewNoteScreen extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () async {
           NotesProvider _notesProvider = Get.find();
-          File image;
+          File? image;
           if (viewNote.imagePath != null) {
-            image = await urlToFile(viewNote.imagePath);
+            image = await urlToFile(viewNote.imagePath!);
           }
           _notesProvider.createNewNote(
-              viewNote.title, viewNote.description, image);
+            title: viewNote.title,
+            description: viewNote.description,
+            image: image,
+          );
 
           locator.get<NavigationService>().navigateBack();
         },
         child: Text(
           'Add to My Note',
-          style: textTheme.headline4.copyWith(color: Colors.white),
+          style: textTheme.headline4!.copyWith(color: Colors.white),
         ),
       ),
     );

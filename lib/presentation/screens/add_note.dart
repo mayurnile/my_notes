@@ -11,13 +11,13 @@ import 'package:my_notes/presentation/widgets/widgets.dart';
 import 'package:my_notes/providers/notes_provider.dart';
 
 class AddNotescreen extends StatefulWidget {
-  final Note note;
+  final Note? note;
   final bool isEdit;
 
   AddNotescreen({
-    Key key,
+    Key? key,
     this.note,
-    @required this.isEdit,
+    required this.isEdit,
   }) : super(key: key);
 
   @override
@@ -27,26 +27,26 @@ class AddNotescreen extends StatefulWidget {
 class _AddNotescreenState extends State<AddNotescreen> {
   final _formKey = GlobalKey<FormState>();
 
-  String _title;
-  String _description;
-  String _imagePath;
-  File _image;
+  String? _title;
+  String? _description;
+  String? _imagePath;
+  File? _image;
   bool _editedImage = false;
 
-  ImagePicker _imagePicker;
-  bool _isLoading;
+  late ImagePicker _imagePicker;
+  bool _isLoading = true;
 
-  Size screenSize;
-  TextTheme textTheme;
+  late Size screenSize;
+  late TextTheme textTheme;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.isEdit) {
-      _title = widget.note.title;
-      _description = widget.note.description;
-      _imagePath = widget.note.imagePath;
+    if (widget.isEdit && widget.note != null) {
+      _title = widget.note!.title;
+      _description = widget.note!.description;
+      _imagePath = widget.note!.imagePath;
     } else {
       _title = '';
       _description = '';
@@ -128,9 +128,11 @@ class _AddNotescreenState extends State<AddNotescreen> {
             hint: 'Enter Title',
             inputType: TextInputType.text,
             initialValue: _title,
-            onSaved: (String value) => _title = value.trim(),
-            validator: (String value) {
-              if (value.trim().length == 0) {
+            onSaved: (String? value) {
+              if (value != null) _title = value.trim();
+            },
+            validator: (String? value) {
+              if (value != null && value.trim().length == 0) {
                 return 'This field cannot be empty !';
               }
             },
@@ -142,10 +144,12 @@ class _AddNotescreenState extends State<AddNotescreen> {
             hint: 'Enter Description',
             inputType: TextInputType.multiline,
             initialValue: _description,
-            onSaved: (String value) => _description = value.trim(),
+            onSaved: (String? value) {
+              if (value != null) _description = value.trim();
+            },
             maxLines: 5,
-            validator: (String value) {
-              if (value.trim().length == 0) {
+            validator: (String? value) {
+              if (value != null && value.trim().length == 0) {
                 return 'This field cannot be empty !';
               }
             },
@@ -156,14 +160,14 @@ class _AddNotescreenState extends State<AddNotescreen> {
   }
 
   Widget _buildImageView() {
-    if (widget.isEdit && _editedImage == false) {
-      return _imagePath != null
+    if (widget.isEdit && _imagePath != null && _editedImage == false) {
+      return _imagePath!.length != 0
           ? Padding(
               padding: const EdgeInsets.only(top: 22.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12.0),
                 child: Image.network(
-                  _imagePath,
+                  _imagePath!,
                   width: screenSize.width,
                   height: screenSize.height * 0.3,
                   fit: BoxFit.cover,
@@ -178,7 +182,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: Image.file(
-                _image,
+                _image!,
                 width: screenSize.width,
                 height: screenSize.height * 0.3,
                 fit: BoxFit.cover,
@@ -194,8 +198,8 @@ class _AddNotescreenState extends State<AddNotescreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         //attach / remove button
-        widget.isEdit && _editedImage == false
-            ? _imagePath == null
+        widget.isEdit && _imagePath != null && _editedImage == false
+            ? _imagePath!.length == 0
                 ? SizedBox(
                     width: (screenSize.width / 2) - 32.0,
                     child: ElevatedButton(
@@ -214,7 +218,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                           //text
                           Text(
                             'Attach Image',
-                            style: textTheme.headline5
+                            style: textTheme.headline5!
                                 .copyWith(color: Colors.black),
                           ),
                         ],
@@ -239,7 +243,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                           //text
                           Text(
                             'Remove Image',
-                            style: textTheme.headline5
+                            style: textTheme.headline5!
                                 .copyWith(color: Colors.black),
                           ),
                         ],
@@ -265,7 +269,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                           //text
                           Text(
                             'Attach Image',
-                            style: textTheme.headline5
+                            style: textTheme.headline5!
                                 .copyWith(color: Colors.black),
                           ),
                         ],
@@ -290,7 +294,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                           //text
                           Text(
                             'Remove Image',
-                            style: textTheme.headline5
+                            style: textTheme.headline5!
                                 .copyWith(color: Colors.black),
                           ),
                         ],
@@ -318,7 +322,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                       Text(
                         'Save',
                         style:
-                            textTheme.headline5.copyWith(color: Colors.white),
+                            textTheme.headline5!.copyWith(color: Colors.white),
                       ),
                     ],
                   ),
@@ -414,21 +418,24 @@ class _AddNotescreenState extends State<AddNotescreen> {
 
     final form = _formKey.currentState;
 
-    if (form.validate()) {
+    if (form!.validate()) {
       form.save();
 
       NotesProvider _notesProvider = Get.find();
 
-      if (widget.isEdit) {
+      if (widget.isEdit && widget.note != null) {
         Note editedNote = Note(
-          id: widget.note.id,
-          title: _title,
-          description: _description,
-          imagePath: widget.note.imagePath,
+          id: widget.note!.id,
+          title: _title!,
+          description: _description!,
+          imagePath: widget.note!.imagePath,
           createdTime: DateTime.now(),
         );
 
-        final result = await _notesProvider.editNote(editedNote, _image);
+        final result = await _notesProvider.editNote(
+          editedNote: editedNote,
+          image: _image,
+        );
 
         if (result) {
           Fluttertoast.showToast(msg: 'Note Edited !');
@@ -439,9 +446,9 @@ class _AddNotescreenState extends State<AddNotescreen> {
         }
       } else {
         final result = await _notesProvider.createNewNote(
-          _title,
-          _description,
-          _image,
+          title: _title!,
+          description: _description!,
+          image: _image,
         );
 
         if (result) {

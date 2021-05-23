@@ -22,7 +22,7 @@ class NoNotesError extends StatelessWidget {
             //heading text
             Text(
               'Write down your ideas !',
-              style: textTheme.headline2.copyWith(
+              style: textTheme.headline2!.copyWith(
                 color: Colors.white,
               ),
               textAlign: TextAlign.center,
@@ -32,7 +32,7 @@ class NoNotesError extends StatelessWidget {
             //body text
             Text(
               'You haven\'t taken any notes, click the plus icon below and start creating notes for you to remember...',
-              style: textTheme.headline3.copyWith(color: Colors.white),
+              style: textTheme.headline3!.copyWith(color: Colors.white),
               textAlign: TextAlign.center,
             ),
           ],

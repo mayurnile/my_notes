@@ -13,8 +13,8 @@ class NoteCard extends StatelessWidget {
   final Note note;
 
   NoteCard({
-    Key key,
-    @required this.note,
+    Key? key,
+    required this.note,
   }) : super(key: key);
 
   @override
@@ -39,7 +39,7 @@ class NoteCard extends StatelessWidget {
           //description
           Text(
             note.description,
-            style: textTheme.headline5.copyWith(
+            style: textTheme.headline5!.copyWith(
               color: Colors.black.withOpacity(0.5),
             ),
           ),
@@ -101,7 +101,7 @@ class NoteCard extends StatelessWidget {
   }
 
   Widget _buildImage(Size screenSize) {
-    return note.imagePath == null
+    return note.imagePath!.length == 0
         ? SizedBox.shrink()
         : Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -111,7 +111,7 @@ class NoteCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12.0),
                 child: Image.network(
-                  note.imagePath,
+                  note.imagePath!,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -169,7 +169,7 @@ class NoteCard extends StatelessWidget {
                 title: 'Share',
                 onPressed: () async {
                   NotesProvider _notesProvider = Get.find();
-                  var url = await _notesProvider.shareNote(note.id);
+                  var url = await _notesProvider.shareNote(noteID: note.id!);
                   Navigator.of(context).pop();
 
                   Share.share('Hey checkout my note:\n $url');
@@ -186,7 +186,8 @@ class NoteCard extends StatelessWidget {
                 title: 'Remove',
                 onPressed: () async {
                   NotesProvider _notesProvider = Get.find();
-                  final result = await _notesProvider.removeNote(note.id);
+                  final result =
+                      await _notesProvider.removeNote(noteId: note.id!);
 
                   if (result) {
                     Fluttertoast.showToast(msg: 'Note Removed !');

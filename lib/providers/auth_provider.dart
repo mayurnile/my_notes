@@ -5,15 +5,15 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthProvider extends GetxController {
-  FirebaseAuth _firebaseAuth;
+  late FirebaseAuth _firebaseAuth;
 
-  String _email;
-  String _password;
-  String _confirmPassword;
-  bool _showPassword;
-  bool _showConfirmPassword;
-  AuthState _state;
-  String _errorMessage;
+  String? _email;
+  String? _password;
+  String? _confirmPassword;
+  bool? _showPassword;
+  bool? _showConfirmPassword;
+  late AuthState _state;
+  late String _errorMessage;
 
   @override
   void onInit() {
@@ -37,12 +37,13 @@ class AuthProvider extends GetxController {
   set setPassword(String pw) => _password = pw;
   set setConfirmPassword(String cpw) => _confirmPassword = cpw;
   void toggleShowPassword() {
-    _showPassword = !_showPassword;
+    _showPassword = _showPassword != null ? !_showPassword! : false;
     update();
   }
 
   void toggleShowConfirmPassword() {
-    _showConfirmPassword = !_showConfirmPassword;
+    _showConfirmPassword =
+        _showConfirmPassword != null ? !_showConfirmPassword! : true;
     update();
   }
 
@@ -61,8 +62,10 @@ class AuthProvider extends GetxController {
   Future<bool> login() async {
     _setLoadingState();
     try {
-      final User user = (await _firebaseAuth.signInWithEmailAndPassword(
-              email: email, password: password))
+      final User? user = (await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      ))
           .user;
 
       if (user != null) {
@@ -87,8 +90,10 @@ class AuthProvider extends GetxController {
   Future<bool> signup() async {
     _setLoadingState();
     try {
-      final User user = (await _firebaseAuth.createUserWithEmailAndPassword(
-              email: email, password: password))
+      final User? user = (await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      ))
           .user;
 
       if (user != null) {

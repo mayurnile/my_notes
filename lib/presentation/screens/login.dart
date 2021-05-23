@@ -93,17 +93,19 @@ class LoginScreen extends StatelessWidget {
                 key: ValueKey('email'),
                 hint: 'Enter Email',
                 inputType: TextInputType.emailAddress,
-                onSaved: (String value) =>
-                    _authProvider.setEmail = value.trim(),
+                onSaved: (String? value) {
+                  if (value != null) _authProvider.setEmail = value.trim();
+                },
                 inputFormatters: [
                   FilteringTextInputFormatter.deny(RegExp(r"\s")),
                 ],
-                validator: (String value) {
-                  if (value.trim().length == 0) {
+                validator: (String? value) {
+                  if (value != null && value.trim().length == 0) {
                     return 'This field cannot be empty !';
                   }
-                  if (!RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                      .hasMatch(value.trim())) {
+                  if (value != null &&
+                      !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                          .hasMatch(value.trim())) {
                     return 'Please enter a valid email !';
                   }
                   return null;
@@ -134,14 +136,13 @@ class LoginScreen extends StatelessWidget {
                       : MyNotesTheme.FONT_DARK_COLOR,
                   onPressed: _authProvider.toggleShowPassword,
                 ),
-                onSaved: (String value) =>
-                    _authProvider.setPassword = value.trim(),
-                validator: (String value) {
-                  if (value.trim().length == 0) {
-                    // setState(() => _passwordError = true);
+                onSaved: (String? value) {
+                  if (value != null) _authProvider.setPassword = value.trim();
+                },
+                validator: (String? value) {
+                  if (value != null && value.trim().length == 0) {
                     return 'This field cannot be empty !';
                   }
-                  return null;
                 },
               ),
               //spacing
@@ -158,7 +159,7 @@ class LoginScreen extends StatelessWidget {
                       child: Text(
                         'Login',
                         style:
-                            textTheme.headline4.copyWith(color: Colors.white),
+                            textTheme.headline4!.copyWith(color: Colors.white),
                       ),
                     ),
             ],
@@ -186,7 +187,7 @@ class LoginScreen extends StatelessWidget {
               key: ValueKey('signup_button'),
               child: Text(
                 'Signup',
-                style: textTheme.bodyText1.copyWith(
+                style: textTheme.bodyText1!.copyWith(
                   color: MyNotesTheme.PRIMARY_COLOR,
                   fontWeight: FontWeight.w700,
                 ),
@@ -201,7 +202,7 @@ class LoginScreen extends StatelessWidget {
   void _login(AuthProvider _authProvider) async {
     final form = _formKey.currentState;
 
-    if (form.validate()) {
+    if (form!.validate()) {
       form.save();
 
       final result = await _authProvider.login();

@@ -18,6 +18,7 @@ class MyNotes extends StatelessWidget {
     return GetMaterialApp(
       title: 'My Notes',
       theme: MyNotesTheme.myNotesThemeData,
+      debugShowCheckedModeBanner: false,
       navigatorKey: di.locator<NavigationService>().navigatorKey,
       onGenerateRoute: generateRoute,
     );

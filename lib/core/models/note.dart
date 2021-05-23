@@ -1,19 +1,17 @@
-import 'package:flutter/cupertino.dart';
-
 class Note {
-  final String id;
+  final String? id;
   final String title;
   final String description;
-  final String imagePath;
+  final String? imagePath;
   final DateTime createdTime;
-  final List<String> searchParameters;
+  final List<String>? searchParameters;
 
   Note({
     this.id,
-    @required this.title,
-    @required this.description,
+    required this.title,
+    required this.description,
     this.imagePath,
-    @required this.createdTime,
+    required this.createdTime,
     this.searchParameters,
   });
 
@@ -23,7 +21,7 @@ class Note {
       title: json['title'],
       description: json['description'],
       imagePath: json['image_path'],
-      createdTime: DateTime.tryParse(json['created_time'] as String),
+      createdTime: DateTime.tryParse(json['created_time'] as String)!,
     );
   }
 

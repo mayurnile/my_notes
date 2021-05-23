@@ -4,30 +4,30 @@ import 'package:flutter/services.dart';
 import '../../core/core.dart';
 
 class MyTextField extends StatelessWidget {
-  final String label;
+  final String? label;
   final String hint;
   final TextInputType inputType;
   final bool obscureText;
   final bool autofocus;
   final TextCapitalization textCapitalization;
-  final String initialValue;
+  final String? initialValue;
   final int maxLines;
-  final Function(String) onSaved;
-  final Function(String) onChanged;
-  final Function validator;
-  final TextEditingController controller;
+  final void Function(String?)? onSaved;
+  final Function(String)? onChanged;
+  final String? Function(String?)? validator;
+  final TextEditingController? controller;
   final bool enabled;
-  final Widget suffix;
-  final Widget prefix;
-  final Widget action;
-  final List<TextInputFormatter> inputFormatters;
+  final Widget? suffix;
+  final Widget? prefix;
+  final Widget? action;
+  final List<TextInputFormatter>? inputFormatters;
   final bool isError;
-  final String errorText;
+  final String? errorText;
 
   MyTextField({
     this.label,
-    @required this.hint,
-    @required this.inputType,
+    required this.hint,
+    required this.inputType,
     this.obscureText = false,
     this.autofocus = false,
     this.textCapitalization = TextCapitalization.words,
@@ -44,7 +44,7 @@ class MyTextField extends StatelessWidget {
     this.inputFormatters,
     this.isError = false,
     this.errorText,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -59,14 +59,14 @@ class MyTextField extends StatelessWidget {
             //heading text
             if (label != null)
               Text(
-                label,
+                label!,
                 key: ValueKey('label'),
                 style: textTheme.headline6,
               ),
             //spacing
             Spacer(),
             //action
-            if (action != null) action,
+            if (action != null) action!,
           ],
         ),
         //spacing
@@ -80,7 +80,7 @@ class MyTextField extends StatelessWidget {
           ),
           child: TextFormField(
             controller: controller,
-            style: textTheme.headline5.copyWith(
+            style: textTheme.headline5!.copyWith(
               fontWeight: FontWeight.w700,
               color: isError
                   ? MyNotesTheme.ERROR_COLOR

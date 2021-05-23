@@ -81,17 +81,19 @@ class SignupScreen extends StatelessWidget {
                 key: ValueKey('email'),
                 hint: 'Enter Email',
                 inputType: TextInputType.emailAddress,
-                onSaved: (String value) =>
-                    _authProvider.setEmail = value.trim(),
+                onSaved: (String? value) {
+                  if (value != null) _authProvider.setEmail = value.trim();
+                },
                 inputFormatters: [
                   FilteringTextInputFormatter.deny(RegExp(r"\s")),
                 ],
-                validator: (String value) {
-                  if (value.trim().length == 0) {
+                validator: (String? value) {
+                  if (value != null && value.trim().length == 0) {
                     return 'This field cannot be empty !';
                   }
-                  if (!RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                      .hasMatch(value.trim())) {
+                  if (value != null &&
+                      !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                          .hasMatch(value.trim())) {
                     return 'Please enter a valid email !';
                   }
                   return null;
@@ -122,15 +124,15 @@ class SignupScreen extends StatelessWidget {
                       : MyNotesTheme.FONT_DARK_COLOR,
                   onPressed: _authProvider.toggleShowPassword,
                 ),
-                onSaved: (String value) =>
-                    _authProvider.setPassword = value.trim(),
+                onSaved: (String? value) {
+                  if (value != null) _authProvider.setPassword = value.trim();
+                },
                 onChanged: (String value) =>
                     _authProvider.setPassword = value.trim(),
-                validator: (String value) {
-                  if (value.trim().length == 0) {
+                validator: (String? value) {
+                  if (value != null && value.trim().length == 0) {
                     return 'This field cannot be empty !';
                   }
-                  return null;
                 },
               ),
               //spacing
@@ -158,12 +160,13 @@ class SignupScreen extends StatelessWidget {
                       : MyNotesTheme.FONT_DARK_COLOR,
                   onPressed: _authProvider.toggleShowConfirmPassword,
                 ),
-                onSaved: (String value) =>
-                    _authProvider.setConfirmPassword = value.trim(),
-                validator: (String value) {
-                  if (value.trim().length == 0) {
+                onSaved: (String? value) {
+                  if(value != null) _authProvider.setConfirmPassword = value.trim();
+                },
+                validator: (String? value) {
+                  if (value != null && value.trim().length == 0) {
                     return 'This field cannot be empty !';
-                  } else if (value.trim() != _authProvider.password) {
+                  } else if (value != null && value.trim() != _authProvider.password) {
                     return 'Password and Confirm Password didn\'t match !';
                   }
                   return null;
@@ -183,7 +186,7 @@ class SignupScreen extends StatelessWidget {
                       child: Text(
                         'Signup',
                         style:
-                            textTheme.headline4.copyWith(color: Colors.white),
+                            textTheme.headline4!.copyWith(color: Colors.white),
                       ),
                     ),
             ],
@@ -211,7 +214,7 @@ class SignupScreen extends StatelessWidget {
               key: ValueKey('login_button'),
               child: Text(
                 'Login',
-                style: textTheme.bodyText1.copyWith(
+                style: textTheme.bodyText1!.copyWith(
                   color: MyNotesTheme.PRIMARY_COLOR,
                   fontWeight: FontWeight.w700,
                 ),
@@ -226,7 +229,7 @@ class SignupScreen extends StatelessWidget {
   void _signup(AuthProvider _authProvider) async {
     final form = _formKey.currentState;
 
-    if (form.validate()) {
+    if (form!.validate()) {
       form.save();
 
       final result = await _authProvider.signup();

@@ -5,29 +5,30 @@ class NavigationService {
 
   Future<dynamic> navigateToNamed(String routeName,
       {Map<String, dynamic> arguments = const {}}) {
-    return navigatorKey.currentState.pushNamed(routeName, arguments: arguments);
+    return navigatorKey.currentState!
+        .pushNamed(routeName, arguments: arguments);
   }
 
   Future<dynamic> removeAllAndPush(String routeName,
       {Map<String, dynamic> arguments = const {}}) {
-    return navigatorKey.currentState.pushNamedAndRemoveUntil(
+    return navigatorKey.currentState!.pushNamedAndRemoveUntil(
         routeName, (route) => false,
         arguments: arguments);
   }
 
   Future<dynamic> navigateToReplacement(String routeName,
       {Map<String, dynamic> arguments = const {}}) {
-    return navigatorKey.currentState
+    return navigatorKey.currentState!
         .pushReplacementNamed(routeName, arguments: arguments);
   }
 
   Future<dynamic> resetNavigatorWithNamed(String routeName,
       {Map<String, dynamic> arguments = const {}}) {
-    return navigatorKey.currentState
+    return navigatorKey.currentState!
         .pushNamedAndRemoveUntil(routeName, (_) => false, arguments: arguments);
   }
 
   void navigateBack({bool resetColor = true}) {
-    return navigatorKey.currentState.pop();
+    return navigatorKey.currentState!.pop();
   }
 }

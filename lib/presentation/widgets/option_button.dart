@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class OptionButton extends StatelessWidget {
-  final String icon;
-  final String title;
-  final Function onPressed;
+  final String? icon;
+  final String? title;
+  final void Function()? onPressed;
 
   OptionButton({
-    Key key,
-    @required this.icon,
-    @required this.title,
-    @required this.onPressed,
+    Key? key,
+    required this.icon,
+    required this.title,
+    required this.onPressed,
   }) : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class OptionButton extends StatelessWidget {
           children: [
             //icon
             SvgPicture.asset(
-              icon,
+              icon!,
               height: 22.0,
               width: 22.0,
             ),
@@ -33,7 +33,7 @@ class OptionButton extends StatelessWidget {
             SizedBox(width: 16.0),
             //title
             Text(
-              title,
+              title!,
               style: Theme.of(context).textTheme.headline4,
             ),
           ],
