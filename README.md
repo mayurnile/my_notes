@@ -8,7 +8,7 @@
 </div>
 
 <div align="center">
-    <br><br><br><br>
+    <br><br>
     <h3 align="center">made</h3>
     <img src="assets/icons/with_null_safety.png" height=128>
     <h3 align="center">
@@ -34,24 +34,24 @@
 
 
 # About
-### This is my mini-project named "My Notes" which was made for HMI and CCL subject where I practised deploying my backend to firebase and also creating the UI interface using Figma. Also after the completion of project Google launched "Null Safety" in Flutter 2.0, which is also being implemented in this project. You can clone the repo and try on yourself in simple few steps as stated below.
+#### This is my mini-project named "My Notes" which was made for HMI and CCL subject where I practised deploying my backend to firebase and also creating the UI interface using Figma. Also after the completion of project Google launched "Null Safety" in Flutter 2.0, which is also being implemented in this project. You can clone the repo and try on yourself in simple few steps as stated below.
 
 <div><br><br></div>
 
 # Built With
-### This application is built using Flutter, Firebase and Dart which is an underlying language which Flutter requires.
+#### This application is built using Flutter, Firebase and Dart which is an underlying language which Flutter requires.
 
 <div align="center" display="block">
 <br>
-<img align="center" alt="Flutter" style="object-fit: scale-down;" width="72px" height="48px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/flutter/flutter.png" />
-<img align="center" alt="Firebase" style="object-fit: scale-down;" width="72px" height="48px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/firebase/firebase.png" />
-<img align="center" alt="Visual Studio Code" style="object-fit: scale-down;" width="72px" height="48px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/dart/dart.png" />
+<img align="center" alt="Flutter" style="object-fit: contain;" width="72px" height="48px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/flutter/flutter.png" />
+<img align="center" alt="Firebase" style="object-fit: contain;" width="72px" height="48px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/firebase/firebase.png" />
+<img align="center" alt="Visual Studio Code" style="object-fit: contain;" width="72px" height="48px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/dart/dart.png" />
 </div>
 
 <br><br></div>
 
 # Screenshots
-### First this app was designed using Figma and then implemented using Flutter and Firebase
+#### First this app was designed using Figma and then implemented using Flutter and Firebase
 
 ### Design File - [My Notes Design](https://www.figma.com/file/s3kAQrAKGjYz6su5iFqRcN/My-Notes?node-id=0%3A1)
 
@@ -59,7 +59,7 @@
 - to be added yet
 
 # How can you use it ?
-### You need to follow this simple steps to execute this application locally on your machine
+#### You need to follow this simple steps to execute this application locally on your machine
 
 ## Prerequisites
 1. Flutter SDK must be installed -> [How to do it ?](https://flutter.dev/docs/get-started/install)
