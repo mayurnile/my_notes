@@ -33,7 +33,7 @@
 
 
 # About
-#### This is my mini-project named "My Notes" which was made for HMI and CCL subject where I practised deploying my backend to firebase and also creating the UI interface using Figma. Also after the completion of project Google launched "Null Safety" in Flutter 2.0, which is also being implemented in this project. You can clone the repo and try on yourself in simple few steps as stated below.
+#### This is my HMI and CCL mini-project, "My Notes," in which I practised deploying my backend to Firebase as well as designing the UI interface using Figma. After the project was completed, Google released "Null Safety" in Flutter 2.0, which is also used in this project. You can clone the repo and try it out for yourself using the instructions below.
 
 <div><br><br></div>
 
