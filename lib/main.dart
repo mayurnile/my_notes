@@ -13,7 +13,7 @@ void main() async {
 }
 
 class MyNotes extends StatelessWidget {
-  @override
+  @override 
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'My Notes',

@@ -4,7 +4,6 @@
     <h3 align="center">
         A notes managing app made using Flutter & Firebase
     </h3>
-    </h1>
 </div>
 
 <div align="center">
@@ -56,7 +55,34 @@
 ### Design File - [My Notes Design](https://www.figma.com/file/s3kAQrAKGjYz6su5iFqRcN/My-Notes?node-id=0%3A1)
 
 ### Here are the App Screenshots
-- to be added yet
+- Login Screen
+<br><br>
+<img src = "assets/media/Screen-1.jpg" height = 512>
+
+- Signup Screen
+<br><br>
+<img src = "assets/media/Screen-2.jpg" height = 512>
+
+- Home Screen
+<br><br>
+<img src = "assets/media/Screen-3.jpg" height = 512>
+
+- Options Panel
+<br><br>
+<img src = "assets/media/Screen-4.jpg" height = 512>
+
+- Add New Note Screen
+<br><br>
+<img src = "assets/media/Screen-5.jpg" height = 512>
+
+- Edit Note Screen
+<br><br>
+<img src = "assets/media/Screen-6.jpg" height = 512>
+
+- Search Note Screen
+<br><br>
+<img src = "assets/media/Screen-7.jpg" height = 512>
+<br><br>
 
 # How can you use it ?
 #### You need to follow this simple steps to execute this application locally on your machine
