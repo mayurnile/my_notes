@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthProvider extends GetxController {
@@ -59,14 +58,19 @@ class AuthProvider extends GetxController {
 
   ///[Login method]
   ///Return true if login is success or false if unsuccess
-  Future<bool> login() async {
+  Future<bool> login({
+    required FirebaseAuth auth,
+    required String email,
+    required String password,
+  }) async {
     _setLoadingState();
     try {
-      final User? user = (await _firebaseAuth.signInWithEmailAndPassword(
+      final User? user = (await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       ))
           .user;
+      // await _authRepository.signIn(email, password);
 
       if (user != null) {
         _state = AuthState.AUTHENTICATED;
@@ -87,10 +91,14 @@ class AuthProvider extends GetxController {
 
   ///[Signup method]
   ///Return true if signup is success or false if unsuccess
-  Future<bool> signup() async {
+  Future<bool> signup({
+    required FirebaseAuth auth,
+    required String email,
+    required String password,
+  }) async {
     _setLoadingState();
     try {
-      final User? user = (await _firebaseAuth.createUserWithEmailAndPassword(
+      final User? user = (await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       ))
@@ -113,17 +121,17 @@ class AuthProvider extends GetxController {
     return false;
   }
 
-  Future<bool> logout() async {
+  Future<bool> logout({required FirebaseAuth auth}) async {
     _setLoadingState();
-    try {
-      await _firebaseAuth.signOut();
+    // try {
+      await auth.signOut();
 
       _state = AuthState.UNAUTHENTICATED;
       update();
       return true;
-    } catch (_) {
-      return false;
-    }
+    // } catch (_) {
+    //   return false;
+    // }
   }
 
   ///[Setting State as Loading]

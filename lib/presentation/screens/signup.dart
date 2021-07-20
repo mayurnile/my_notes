@@ -161,12 +161,14 @@ class SignupScreen extends StatelessWidget {
                   onPressed: _authProvider.toggleShowConfirmPassword,
                 ),
                 onSaved: (String? value) {
-                  if(value != null) _authProvider.setConfirmPassword = value.trim();
+                  if (value != null)
+                    _authProvider.setConfirmPassword = value.trim();
                 },
                 validator: (String? value) {
                   if (value != null && value.trim().length == 0) {
                     return 'This field cannot be empty !';
-                  } else if (value != null && value.trim() != _authProvider.password) {
+                  } else if (value != null &&
+                      value.trim() != _authProvider.password) {
                     return 'Password and Confirm Password didn\'t match !';
                   }
                   return null;
@@ -232,7 +234,11 @@ class SignupScreen extends StatelessWidget {
     if (form!.validate()) {
       form.save();
 
-      final result = await _authProvider.signup();
+      final result = await _authProvider.signup(
+        auth: _authProvider.firebaseAuth,
+        email: _authProvider.email,
+        password: _authProvider.password,
+      );
 
       if (result) {
         locator.get<NavigationService>().navigateToReplacement(HOME_ROUTE);

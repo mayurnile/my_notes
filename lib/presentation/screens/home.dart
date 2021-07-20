@@ -116,7 +116,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               ? CircularProgressIndicator()
               : InkWell(
                   onTap: () async {
-                    final result = await _authProvider.logout();
+                    final result = await _authProvider.logout(
+                      auth: _authProvider.firebaseAuth,
+                    );
 
                     if (result) {
                       locator

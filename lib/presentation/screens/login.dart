@@ -205,7 +205,11 @@ class LoginScreen extends StatelessWidget {
     if (form!.validate()) {
       form.save();
 
-      final result = await _authProvider.login();
+      final result = await _authProvider.login(
+        auth: _authProvider.firebaseAuth,
+        email: _authProvider.email,
+        password: _authProvider.password,
+      );
 
       if (result) {
         locator.get<NavigationService>().navigateToReplacement(HOME_ROUTE);
