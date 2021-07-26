@@ -29,44 +29,46 @@ class NotesProvider extends GetxController {
     //initialize variables
     _myNotes = [];
     _searchedNotes = [];
-    _state = NotesState.LOADING;
+    _state = NotesState.loading;
   }
 
-  get myNotes => _myNotes;
-  get notesState => _state;
-  get searchedNotes => _searchedNotes;
+  List<Note>? get myNotes => _myNotes;
+  NotesState get notesState => _state;
+  List<Note>? get searchedNotes => _searchedNotes;
 
   Future<void> fetchAllNotes() async {
     _myNotes = [];
-    AuthProvider _authProvider = Get.find();
-    User user = _authProvider.firebaseAuth.currentUser;
-    String userId = user.uid;
+    final AuthProvider _authProvider = Get.find();
+    final User? user = _authProvider.firebaseAuth.currentUser;
+    final String userId = user!.uid;
 
-    _state = NotesState.LOADING;
-    update();
+    // _state = NotesState.loading;
+    // update();
 
     try {
-      CollectionReference? collectionReference =
-          _firestore.collection('users').doc('$userId').collection('notes');
+      final CollectionReference collectionReference =
+          _firestore.collection('users').doc(userId).collection('notes');
 
-      QuerySnapshot? queryData = await collectionReference.get();
+      final QuerySnapshot queryData = await collectionReference.get();
 
-      if (queryData.docs.length == 0) {
-        _state = NotesState.NONOTES;
+      if (queryData.docs.isEmpty) {
+        _state = NotesState.noNotes;
         update();
       } else {
-        queryData.docs.forEach((snapshot) {
-          Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>;
-          Note? myNote = Note.fromJSON(data, snapshot.id);
+        for (final snapshot in queryData.docs) {
+          final Map<String, dynamic>? data =
+              snapshot.data() as Map<String, dynamic>?;
+          final Note myNote = Note.fromJSON(data!, snapshot.id);
           _myNotes!.add(myNote);
-        });
+        }
+        // queryData.docs.forEach((snapshot) {});
 
         _myNotes!.sort((a, b) => a.createdTime.isAfter(b.createdTime) ? 0 : 1);
-        _state = NotesState.LOADED;
+        _state = NotesState.loaded;
         update();
       }
     } catch (_) {
-      _state = NotesState.ERROR;
+      _state = NotesState.error;
       update();
     }
   }
@@ -77,8 +79,8 @@ class NotesProvider extends GetxController {
     required String description,
     File? image,
   }) async {
-    AuthProvider _authProvider = Get.find();
-    User? user = _authProvider.firebaseAuth.currentUser;
+    final AuthProvider _authProvider = Get.find();
+    final User? user = _authProvider.firebaseAuth.currentUser;
     String? userId = '';
     if (user != null) {
       userId = user.uid;
@@ -89,21 +91,24 @@ class NotesProvider extends GetxController {
     try {
       String imageUrl = '';
 
-      if (image != null)
+      if (image != null) {
         imageUrl = await _uploadFile(image: image, userId: userId);
-
-      DocumentReference userDocument =
-          _firestore.collection('users').doc('$userId');
-
-      List<String> _searchParameters = [];
-      String temp = "";
-
-      for (int i = 0; i < title.trim().length; i++) {
-        temp += title[i];
-        _searchParameters.add(temp);
       }
 
-      Note newNote = Note(
+      final DocumentReference userDocument =
+          _firestore.collection('users').doc(userId);
+
+      final List<String> _searchParameters = [];
+      final temp = StringBuffer();
+      // String temp = "";
+
+      for (int i = 0; i < title.trim().length; i++) {
+        // temp += title[i];
+        temp.write(title[i]);
+        _searchParameters.add(temp.toString());
+      }
+
+      final Note newNote = Note(
         title: title.trim(),
         description: description.trim(),
         imagePath: imageUrl,
@@ -121,8 +126,8 @@ class NotesProvider extends GetxController {
 
   ///[Method for Removing a Note]
   Future<bool> removeNote({required String noteId}) async {
-    AuthProvider _authProvider = Get.find();
-    User? user = _authProvider.firebaseAuth.currentUser;
+    final AuthProvider _authProvider = Get.find();
+    final User? user = _authProvider.firebaseAuth.currentUser;
     String? userId = '';
     if (user != null) {
       userId = user.uid;
@@ -131,11 +136,11 @@ class NotesProvider extends GetxController {
     }
 
     try {
-      DocumentReference userDocument = _firestore
+      final DocumentReference userDocument = _firestore
           .collection('users')
-          .doc('$userId')
+          .doc(userId)
           .collection('notes')
-          .doc('$noteId');
+          .doc(noteId);
 
       await userDocument.delete();
       fetchAllNotes();
@@ -147,8 +152,8 @@ class NotesProvider extends GetxController {
 
   ///[Method for Editing Note]
   Future<bool> editNote({required Note editedNote, File? image}) async {
-    AuthProvider _authProvider = Get.find();
-    User? user = _authProvider.firebaseAuth.currentUser;
+    final AuthProvider _authProvider = Get.find();
+    final User? user = _authProvider.firebaseAuth.currentUser;
     String? userId = '';
     if (user != null) {
       userId = user.uid;
@@ -157,11 +162,11 @@ class NotesProvider extends GetxController {
     }
 
     try {
-      DocumentReference? userDocument = _firestore
+      final DocumentReference userDocument = _firestore
           .collection('users')
-          .doc('$userId')
+          .doc(userId)
           .collection('notes')
-          .doc('${editedNote.id}');
+          .doc(editedNote.id);
 
       String? imageUrl;
       if (image != null) {
@@ -170,14 +175,16 @@ class NotesProvider extends GetxController {
         imageUrl = editedNote.imagePath;
       }
 
-      List<String> _searchParameters = [];
-      String temp = "";
+      final List<String> _searchParameters = [];
+      final temp = StringBuffer();
+      // String temp = "";
       for (int i = 0; i < editedNote.title.trim().length; i++) {
-        temp += editedNote.title[i];
-        _searchParameters.add(temp);
+        // temp += editedNote.title[i];
+        temp.write(editedNote.title[i]);
+        _searchParameters.add(temp.toString());
       }
 
-      Note newNote = Note(
+      final Note newNote = Note(
         id: editedNote.id,
         title: editedNote.title,
         description: editedNote.description,
@@ -199,16 +206,16 @@ class NotesProvider extends GetxController {
   Future<void> searchNotes({required String searchString}) async {
     try {
       _searchedNotes = [];
-      _state = NotesState.SEARCHING;
+      _state = NotesState.searching;
       update();
 
-      if (searchString.length == 0) {
-        _state = NotesState.LOADED;
+      if (searchString.isEmpty) {
+        _state = NotesState.loaded;
         update();
         return;
       }
-      AuthProvider _authProvider = Get.find();
-      User? user = _authProvider.firebaseAuth.currentUser;
+      final AuthProvider _authProvider = Get.find();
+      final User? user = _authProvider.firebaseAuth.currentUser;
       String? userId = '';
       if (user != null) {
         userId = user.uid;
@@ -216,38 +223,46 @@ class NotesProvider extends GetxController {
         return;
       }
 
-      List<DocumentSnapshot> documentList = (await _firestore
+      final List<DocumentSnapshot> documentList = (await _firestore
               .collection('users')
-              .doc('$userId')
+              .doc(userId)
               .collection('notes')
               .where('searchParameters', arrayContains: searchString)
               .get())
           .docs;
 
-      if (documentList.length == 0) {
-        _state = NotesState.SEARCHEMPTY;
+      if (documentList.isEmpty) {
+        _state = NotesState.searchEmpty;
         update();
       } else {
-        documentList.forEach((snapshot) {
-          Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>;
-          Note myNote = Note.fromJSON(data, snapshot.id);
+        for (final snapshot in documentList) {
+          final Map<String, dynamic>? data =
+              snapshot.data() as Map<String, dynamic>?;
+          final Note myNote = Note.fromJSON(data!, snapshot.id);
           _searchedNotes!.add(myNote);
-        });
+        }
+
+        // documentList.forEach((snapshot) {
+        //   final Map<String, dynamic>? data =
+        //       snapshot.data() as Map<String, dynamic>?;
+        //   final Note myNote = Note.fromJSON(data!, snapshot.id);
+        //   _searchedNotes!.add(myNote);
+        // });
 
         _myNotes!.sort((a, b) => a.createdTime.isAfter(b.createdTime) ? 0 : 1);
-        _state = NotesState.SEARCHED;
+        _state = NotesState.searched;
         update();
       }
     } catch (_) {
-      _state = NotesState.ERROR;
+      _state = NotesState.error;
       update();
     }
   }
 
   ///[Method for Sharing Note]
   Future<Uri> shareNote({required String noteID}) async {
-    AuthProvider _authProvider = Get.find();
-    User? user = _authProvider.firebaseAuth.currentUser;
+    final AuthProvider _authProvider = Get.find();
+    final User? user = _authProvider.firebaseAuth.currentUser;
     String? userId = '';
     if (user != null) {
       userId = user.uid;
@@ -264,7 +279,7 @@ class NotesProvider extends GetxController {
         minimumVersion: 1,
       ),
     );
-    var dynamicUrl = await parameters.buildUrl();
+    final dynamicUrl = await parameters.buildUrl();
 
     return dynamicUrl;
   }
@@ -278,15 +293,16 @@ class NotesProvider extends GetxController {
 
       if (deepLink != null) {
         if (deepLink.queryParameters.containsKey('id')) {
-          String? senderID = deepLink.queryParameters['id'];
-          String? noteID = deepLink.queryParameters['noteId'];
+          final String? senderID = deepLink.queryParameters['id'];
+          final String? noteID = deepLink.queryParameters['noteId'];
 
           Note? fetchedNote;
-          if (senderID != null && noteID != null)
+          if (senderID != null && noteID != null) {
             fetchedNote = await fetchNoteById(userId: senderID, noteId: noteID);
+          }
 
           locator.get<NavigationService>().navigateToNamed(
-            VIEW_NOTE_ROUTE,
+            viewNoteRoute,
             arguments: {'note': fetchedNote},
           );
         }
@@ -297,24 +313,26 @@ class NotesProvider extends GetxController {
         PendingDynamicLinkData? dynamicLink,
       ) async {
         if (dynamicLink!.link.queryParameters.containsKey('id')) {
-          String? senderID = dynamicLink.link.queryParameters['id'];
-          String? noteID = dynamicLink.link.queryParameters['noteId'];
+          final String? senderID = dynamicLink.link.queryParameters['id'];
+          final String? noteID = dynamicLink.link.queryParameters['noteId'];
           Note? fetchedNote;
 
-          if (senderID != null && noteID != null)
+          if (senderID != null && noteID != null) {
             fetchedNote = await fetchNoteById(userId: senderID, noteId: noteID);
+          }
 
-          if (fetchedNote != null)
+          if (fetchedNote != null) {
             locator.get<NavigationService>().navigateToNamed(
-              VIEW_NOTE_ROUTE,
+              viewNoteRoute,
               arguments: {'note': fetchedNote},
             );
-          else
+          } else {
             throw Exception;
+          }
         }
       });
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
@@ -322,16 +340,16 @@ class NotesProvider extends GetxController {
   Future<Note?> fetchNoteById(
       {required String userId, required String noteId}) async {
     try {
-      DocumentSnapshot? documentSnapshot = await _firestore
+      final DocumentSnapshot documentSnapshot = await _firestore
           .collection('users')
-          .doc('$userId')
+          .doc(userId)
           .collection('notes')
-          .doc('$noteId')
+          .doc(noteId)
           .get();
 
       Note? fetchedNote;
       if (documentSnapshot.data() != null) {
-        Map<String, dynamic>? data =
+        final Map<String, dynamic>? data =
             documentSnapshot.data() as Map<String, dynamic>?;
         fetchedNote = Note.fromJSON(data!, noteId);
       }
@@ -345,23 +363,24 @@ class NotesProvider extends GetxController {
   ///[Method for uploading file to storage]
   Future<String> _uploadFile(
       {required File image, required String userId}) async {
-    String returnURL;
-    Reference storageReference = _firebaseStorage
+    // String returnURL;
+    final Reference storageReference = _firebaseStorage
         .ref()
         .child('images/$userId/${image.path.split('/').last}');
-    UploadTask uploadTask = storageReference.putFile(image);
+    final UploadTask uploadTask = storageReference.putFile(image);
     await uploadTask;
-    returnURL = await storageReference.getDownloadURL();
-    return returnURL;
+    return storageReference.getDownloadURL();
+    // returnURL = await storageReference.getDownloadURL();
+    // return returnURL;
   }
 }
 
 enum NotesState {
-  LOADING,
-  LOADED,
-  NONOTES,
-  ERROR,
-  SEARCHING,
-  SEARCHED,
-  SEARCHEMPTY
+  loading,
+  loaded,
+  noNotes,
+  error,
+  searching,
+  searched,
+  searchEmpty
 }

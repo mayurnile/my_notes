@@ -1,19 +1,19 @@
 class Assets {
   //paths
-  static const BASE_PATH = './assets/';
-  static const ICONS_PATH = BASE_PATH + 'icons/';
+  static const basePath = './assets';
+  static const iconsPath = '$basePath/icons';
 
   //icons
-  static const LOGO = ICONS_PATH + 'logo.svg';
-  static const ADD = ICONS_PATH + 'add.svg';
-  static const ATTACH = ICONS_PATH + 'attach.svg';
-  static const BACK = ICONS_PATH + 'back.svg';
-  static const CAMERA = ICONS_PATH + 'camera.svg';
-  static const EDIT = ICONS_PATH + 'edit.svg';
-  static const GALLERY = ICONS_PATH + 'gallery.svg';
-  static const LOGOUT = ICONS_PATH + 'logout.svg';
-  static const REMOVE = ICONS_PATH + 'remove.svg';
-  static const SAVE = ICONS_PATH + 'save.svg';
-  static const SEARCH = ICONS_PATH + 'search.svg';
-  static const SHARE = ICONS_PATH + 'share.svg';
+  static const logo = '$iconsPath/logo.svg';
+  static const add = '$iconsPath/add.svg';
+  static const attach = '$iconsPath/attach.svg';
+  static const back = '$iconsPath/back.svg';
+  static const camera = '$iconsPath/camera.svg';
+  static const edit = '$iconsPath/edit.svg';
+  static const gallery = '$iconsPath/gallery.svg';
+  static const logout = '$iconsPath/logout.svg';
+  static const remove = '$iconsPath/remove.svg';
+  static const save = '$iconsPath/save.svg';
+  static const search = '$iconsPath/search.svg';
+  static const share = '$iconsPath/share.svg';
 }

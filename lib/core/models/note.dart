@@ -18,9 +18,9 @@ class Note {
   factory Note.fromJSON(Map<String, dynamic> json, String id) {
     return Note(
       id: id,
-      title: json['title'],
-      description: json['description'],
-      imagePath: json['image_path'],
+      title: json['title'] as String,
+      description: json['description'] as String,
+      imagePath: json['image_path'] as String,
       createdTime: DateTime.tryParse(json['created_time'] as String)!,
     );
   }

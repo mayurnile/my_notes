@@ -33,7 +33,14 @@
 
 
 # About
+
 #### This is my HMI and CCL mini-project, "My Notes," in which I practised deploying my backend to Firebase as well as designing the UI interface using Figma. After the project was completed, Google released "Null Safety" in Flutter 2.0, which is also used in this project. You can clone the repo and try it out for yourself using the instructions below.
+
+<br>
+
+[![style: lint](https://img.shields.io/badge/style-lint-4BC0F5.svg)](https://pub.dev/packages/lint)
+
+#### The whole code is linted, which means all dart rules and linting rules are been followed strictly for optimized and greater code quality.
 
 <div><br><br></div>
 

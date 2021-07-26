@@ -14,7 +14,7 @@ class AddNotescreen extends StatefulWidget {
   final Note? note;
   final bool isEdit;
 
-  AddNotescreen({
+  const AddNotescreen({
     Key? key,
     this.note,
     required this.isEdit,
@@ -65,7 +65,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
       child: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(22.0, 12.0, 22.0, 0.0),
               child: Column(
@@ -92,20 +92,18 @@ class _AddNotescreenState extends State<AddNotescreen> {
 
   Widget _buildAppBar() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         //back button
         InkWell(
           onTap: () => locator.get<NavigationService>().navigateBack(),
           child: SvgPicture.asset(
-            Assets.BACK,
+            Assets.back,
             width: 32.0,
             height: 32.0,
           ),
         ),
         //spacing
-        SizedBox(width: 18.0),
+        const SizedBox(width: 18.0),
         //title
         Text(
           widget.isEdit ? 'Edit Note' : 'Add New Note',
@@ -132,7 +130,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
               if (value != null) _title = value.trim();
             },
             validator: (String? value) {
-              if (value != null && value.trim().length == 0) {
+              if (value != null && value.trim().isEmpty) {
                 return 'This field cannot be empty !';
               }
             },
@@ -149,7 +147,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
             },
             maxLines: 5,
             validator: (String? value) {
-              if (value != null && value.trim().length == 0) {
+              if (value != null && value.trim().isEmpty) {
                 return 'This field cannot be empty !';
               }
             },
@@ -161,7 +159,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
 
   Widget _buildImageView() {
     if (widget.isEdit && _imagePath != null && _editedImage == false) {
-      return _imagePath!.length != 0
+      return _imagePath!.isNotEmpty
           ? Padding(
               padding: const EdgeInsets.only(top: 22.0),
               child: ClipRRect(
@@ -174,7 +172,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                 ),
               ),
             )
-          : SizedBox.shrink();
+          : const SizedBox.shrink();
     }
     return _image != null
         ? Padding(
@@ -189,145 +187,140 @@ class _AddNotescreenState extends State<AddNotescreen> {
               ),
             ),
           )
-        : SizedBox.shrink();
+        : const SizedBox.shrink();
   }
 
   Widget _buildActions() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         //attach / remove button
-        widget.isEdit && _imagePath != null && _editedImage == false
-            ? _imagePath!.length == 0
-                ? SizedBox(
-                    width: (screenSize.width / 2) - 32.0,
-                    child: ElevatedButton(
-                      onPressed: _pickImage,
-                      style: ElevatedButton.styleFrom(
-                        primary: MyNotesTheme.CARD_COLOR,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          //icon
-                          SvgPicture.asset(Assets.ATTACH),
-                          //spacing
-                          SizedBox(width: 8.0),
-                          //text
-                          Text(
-                            'Attach Image',
-                            style: textTheme.headline5!
-                                .copyWith(color: Colors.black),
-                          ),
-                        ],
-                      ),
+        if (widget.isEdit && _imagePath != null && _editedImage == false)
+          _imagePath!.isEmpty
+              ? SizedBox(
+                  width: (screenSize.width / 2) - 32.0,
+                  child: ElevatedButton(
+                    onPressed: _pickImage,
+                    style: ElevatedButton.styleFrom(
+                      primary: MyNotesTheme.cardColor,
                     ),
-                  )
-                : SizedBox(
-                    width: (screenSize.width / 2) - 32.0,
-                    child: ElevatedButton(
-                      onPressed: _removeImage,
-                      style: ElevatedButton.styleFrom(
-                        primary: MyNotesTheme.CARD_COLOR,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          //icon
-                          SvgPicture.asset(Assets.REMOVE),
-                          //spacing
-                          SizedBox(width: 8.0),
-                          //text
-                          Text(
-                            'Remove Image',
-                            style: textTheme.headline5!
-                                .copyWith(color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-            : _image == null
-                ? SizedBox(
-                    width: (screenSize.width / 2) - 32.0,
-                    child: ElevatedButton(
-                      onPressed: _pickImage,
-                      style: ElevatedButton.styleFrom(
-                        primary: MyNotesTheme.CARD_COLOR,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          //icon
-                          SvgPicture.asset(Assets.ATTACH),
-                          //spacing
-                          SizedBox(width: 8.0),
-                          //text
-                          Text(
-                            'Attach Image',
-                            style: textTheme.headline5!
-                                .copyWith(color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                : SizedBox(
-                    width: (screenSize.width / 2) - 32.0,
-                    child: ElevatedButton(
-                      onPressed: _removeImage,
-                      style: ElevatedButton.styleFrom(
-                        primary: MyNotesTheme.CARD_COLOR,
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          //icon
-                          SvgPicture.asset(Assets.REMOVE),
-                          //spacing
-                          SizedBox(width: 8.0),
-                          //text
-                          Text(
-                            'Remove Image',
-                            style: textTheme.headline5!
-                                .copyWith(color: Colors.black),
-                          ),
-                        ],
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //icon
+                        SvgPicture.asset(Assets.attach),
+                        //spacing
+                        const SizedBox(width: 8.0),
+                        //text
+                        Text(
+                          'Attach Image',
+                          style: textTheme.headline5!
+                              .copyWith(color: Colors.black),
+                        ),
+                      ],
                     ),
                   ),
-        //save button
-        _isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : SizedBox(
-                width: (screenSize.width / 2) - 32.0,
-                child: ElevatedButton(
-                  onPressed: _saveNote,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      //icon
-                      SvgPicture.asset(Assets.SAVE),
-                      //spacing
-                      SizedBox(width: 8.0),
-                      //text
-                      Text(
-                        'Save',
-                        style:
-                            textTheme.headline5!.copyWith(color: Colors.white),
-                      ),
-                    ],
+                )
+              : SizedBox(
+                  width: (screenSize.width / 2) - 32.0,
+                  child: ElevatedButton(
+                    onPressed: _removeImage,
+                    style: ElevatedButton.styleFrom(
+                      primary: MyNotesTheme.cardColor,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //icon
+                        SvgPicture.asset(Assets.remove),
+                        //spacing
+                        const SizedBox(width: 8.0),
+                        //text
+                        Text(
+                          'Remove Image',
+                          style: textTheme.headline5!
+                              .copyWith(color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+        else
+          _image == null
+              ? SizedBox(
+                  width: (screenSize.width / 2) - 32.0,
+                  child: ElevatedButton(
+                    onPressed: _pickImage,
+                    style: ElevatedButton.styleFrom(
+                      primary: MyNotesTheme.cardColor,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //icon
+                        SvgPicture.asset(Assets.attach),
+                        //spacing
+                        const SizedBox(width: 8.0),
+                        //text
+                        Text(
+                          'Attach Image',
+                          style: textTheme.headline5!
+                              .copyWith(color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : SizedBox(
+                  width: (screenSize.width / 2) - 32.0,
+                  child: ElevatedButton(
+                    onPressed: _removeImage,
+                    style: ElevatedButton.styleFrom(
+                      primary: MyNotesTheme.cardColor,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //icon
+                        SvgPicture.asset(Assets.remove),
+                        //spacing
+                        const SizedBox(width: 8.0),
+                        //text
+                        Text(
+                          'Remove Image',
+                          style: textTheme.headline5!
+                              .copyWith(color: Colors.black),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              )
+        //save button
+        if (_isLoading)
+          const Center(
+            child: CircularProgressIndicator(),
+          )
+        else
+          SizedBox(
+            width: (screenSize.width / 2) - 32.0,
+            child: ElevatedButton(
+              onPressed: _saveNote,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //icon
+                  SvgPicture.asset(Assets.save),
+                  //spacing
+                  const SizedBox(width: 8.0),
+                  //text
+                  Text(
+                    'Save',
+                    style: textTheme.headline5!.copyWith(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          )
       ],
     );
   }
@@ -339,7 +332,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
       builder: (BuildContext ctx) {
         return Container(
           padding: const EdgeInsets.all(22.0),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12.0),
@@ -359,10 +352,9 @@ class _AddNotescreenState extends State<AddNotescreen> {
               SizedBox(height: screenSize.height * 0.02),
               //options
               OptionButton(
-                icon: Assets.GALLERY,
+                icon: Assets.gallery,
                 title: 'Pick From Gallery',
                 onPressed: () async {
-                  print('executing');
                   final pickedFile =
                       await _imagePicker.getImage(source: ImageSource.gallery);
 
@@ -376,13 +368,13 @@ class _AddNotescreenState extends State<AddNotescreen> {
                 },
               ),
               //divider
-              Divider(
-                color: MyNotesTheme.FONT_LIGHT_COLOR,
+              const Divider(
+                color: MyNotesTheme.fontLightColor,
                 indent: 32.0,
                 endIndent: 32.0,
               ),
               OptionButton(
-                icon: Assets.CAMERA,
+                icon: Assets.camera,
                 title: 'Capture Now',
                 onPressed: () async {
                   final pickedFile =
@@ -411,7 +403,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
     });
   }
 
-  void _saveNote() async {
+  Future<void> _saveNote() async {
     setState(() {
       _isLoading = true;
     });
@@ -421,10 +413,10 @@ class _AddNotescreenState extends State<AddNotescreen> {
     if (form!.validate()) {
       form.save();
 
-      NotesProvider _notesProvider = Get.find();
+      final NotesProvider _notesProvider = Get.find();
 
       if (widget.isEdit && widget.note != null) {
-        Note editedNote = Note(
+        final Note editedNote = Note(
           id: widget.note!.id,
           title: _title!,
           description: _description!,

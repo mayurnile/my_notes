@@ -9,8 +9,8 @@ class AuthProvider extends GetxController {
   String? _email;
   String? _password;
   String? _confirmPassword;
-  bool? _showPassword;
-  bool? _showConfirmPassword;
+  late bool _showPassword;
+  late bool _showConfirmPassword;
   late AuthState _state;
   late String _errorMessage;
 
@@ -28,33 +28,33 @@ class AuthProvider extends GetxController {
     _errorMessage = '';
     _showPassword = true;
     _showConfirmPassword = true;
-    _state = AuthState.UNAUTHENTICATED;
+    _state = AuthState.unauthenticated;
   }
 
   //setter
-  set setEmail(String em) => _email = em;
-  set setPassword(String pw) => _password = pw;
-  set setConfirmPassword(String cpw) => _confirmPassword = cpw;
+  set email(String? em) => _email = em ?? '';
+  set password(String? pw) => _password = pw ?? '';
+  set confirmPassword(String? cpw) => _confirmPassword = cpw ?? '';
+
   void toggleShowPassword() {
-    _showPassword = _showPassword != null ? !_showPassword! : false;
+    _showPassword = !_showPassword;
     update();
   }
 
   void toggleShowConfirmPassword() {
-    _showConfirmPassword =
-        _showConfirmPassword != null ? !_showConfirmPassword! : true;
+    _showConfirmPassword = !_showConfirmPassword;
     update();
   }
 
   //getters
-  get email => _email;
-  get password => _password;
-  get confirmPassword => _confirmPassword;
-  get authState => _state;
-  get authError => _errorMessage;
-  get showPassword => _showPassword;
-  get showConfirmPassword => _showConfirmPassword;
-  get firebaseAuth => _firebaseAuth;
+  String? get email => _email;
+  String? get password => _password;
+  String? get confirmPassword => _confirmPassword;
+  AuthState get authState => _state;
+  String get authError => _errorMessage;
+  bool get showPassword => _showPassword;
+  bool get showConfirmPassword => _showConfirmPassword;
+  FirebaseAuth get firebaseAuth => _firebaseAuth;
 
   ///[Login method]
   ///Return true if login is success or false if unsuccess
@@ -73,17 +73,17 @@ class AuthProvider extends GetxController {
       // await _authRepository.signIn(email, password);
 
       if (user != null) {
-        _state = AuthState.AUTHENTICATED;
+        _state = AuthState.authenticated;
         update();
         return true;
       } else {
-        _state = AuthState.ERROR;
+        _state = AuthState.error;
         _errorMessage = 'Something went wrong';
         update();
         return false;
       }
     } catch (_) {
-      _state = AuthState.UNAUTHENTICATED;
+      _state = AuthState.unauthenticated;
       update();
     }
     return false;
@@ -105,17 +105,17 @@ class AuthProvider extends GetxController {
           .user;
 
       if (user != null) {
-        _state = AuthState.AUTHENTICATED;
+        _state = AuthState.authenticated;
         update();
         return true;
       } else {
-        _state = AuthState.ERROR;
+        _state = AuthState.error;
         _errorMessage = 'Something went wrong';
         update();
         return false;
       }
     } catch (_) {
-      _state = AuthState.UNAUTHENTICATED;
+      _state = AuthState.unauthenticated;
       update();
     }
     return false;
@@ -124,11 +124,11 @@ class AuthProvider extends GetxController {
   Future<bool> logout({required FirebaseAuth auth}) async {
     _setLoadingState();
     // try {
-      await auth.signOut();
+    await auth.signOut();
 
-      _state = AuthState.UNAUTHENTICATED;
-      update();
-      return true;
+    _state = AuthState.unauthenticated;
+    update();
+    return true;
     // } catch (_) {
     //   return false;
     // }
@@ -136,14 +136,14 @@ class AuthProvider extends GetxController {
 
   ///[Setting State as Loading]
   void _setLoadingState() {
-    _state = AuthState.AUTHENTICATING;
+    _state = AuthState.authenticating;
     update();
   }
 }
 
 enum AuthState {
-  AUTHENTICATED,
-  UNAUTHENTICATED,
-  AUTHENTICATING,
-  ERROR,
+  authenticated,
+  unauthenticated,
+  authenticating,
+  error,
 }

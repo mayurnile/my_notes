@@ -13,11 +13,10 @@ class NoNotesError extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 28.0),
         width: screenSize.width,
         decoration: BoxDecoration(
-          color: MyNotesTheme.PRIMARY_COLOR,
+          color: MyNotesTheme.primaryColor,
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             //heading text
             Text(
@@ -28,10 +27,10 @@ class NoNotesError extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             //spacing
-            SizedBox(height: 12.0),
+            const SizedBox(height: 12.0),
             //body text
             Text(
-              'You haven\'t taken any notes, click the plus icon below and start creating notes for you to remember...',
+              "You haven't taken any notes, click the plus icon below and start creating notes for you to remember...",
               style: textTheme.headline3!.copyWith(color: Colors.white),
               textAlign: TextAlign.center,
             ),

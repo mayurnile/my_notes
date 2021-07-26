@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      _timerLink = new Timer(
+      _timerLink = Timer(
         const Duration(milliseconds: 1000),
         () {
           _notesProvider.retrieveDynamicLink(context);
@@ -53,10 +53,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
     return WillPopScope(
       onWillPop: () async {
-        NotesProvider _notesProvider = Get.find();
-        if (_notesProvider.notesState == NotesState.SEARCHED ||
-            _notesProvider.notesState == NotesState.SEARCHEMPTY) {
-          locator.get<NavigationService>().removeAllAndPush(HOME_ROUTE);
+        final NotesProvider _notesProvider = Get.find();
+        if (_notesProvider.notesState == NotesState.searched ||
+            _notesProvider.notesState == NotesState.searchEmpty) {
+          locator.get<NavigationService>().removeAllAndPush(homeRoute);
           return false;
         }
         return true;
@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           child: SafeArea(
             child: RefreshIndicator(
               onRefresh: () async {
-                NotesProvider _notesProvider = Get.find();
+                final NotesProvider _notesProvider = Get.find();
                 _notesProvider.fetchAllNotes();
               },
               child: Padding(
@@ -89,55 +89,56 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => locator.get<NavigationService>().navigateToNamed(
-            ADD_NOTE_ROUTE,
+            addNoteRoute,
             arguments: {'isEdit': false},
           ),
-          child: SvgPicture.asset(Assets.ADD),
+          child: SvgPicture.asset(Assets.add),
         ),
       ),
     );
   }
 
   Widget _buildAppBar(TextTheme textTheme) {
-    return GetBuilder<AuthProvider>(builder: (AuthProvider _authProvider) {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          //title
-          Text(
-            'My Notes',
-            style: textTheme.headline2,
-          ),
-          //spacing
-          Spacer(),
-          //logout button
-          _authProvider.authState == AuthState.AUTHENTICATING
-              ? CircularProgressIndicator()
-              : InkWell(
-                  onTap: () async {
-                    final result = await _authProvider.logout(
-                      auth: _authProvider.firebaseAuth,
-                    );
+    return GetBuilder<AuthProvider>(
+      builder: (AuthProvider _authProvider) {
+        return Row(
+          children: [
+            //title
+            Text(
+              'My Notes',
+              style: textTheme.headline2,
+            ),
+            //spacing
+            const Spacer(),
+            //logout button
+            if (_authProvider.authState == AuthState.authenticating)
+              const CircularProgressIndicator()
+            else
+              InkWell(
+                onTap: () async {
+                  final result = await _authProvider.logout(
+                    auth: _authProvider.firebaseAuth,
+                  );
 
-                    if (result) {
-                      locator
-                          .get<NavigationService>()
-                          .removeAllAndPush(LOGIN_ROUTE);
-                    }
-                  },
-                  child: RotatedBox(
-                    quarterTurns: 3,
-                    child: SvgPicture.asset(
-                      Assets.LOGOUT,
-                      height: 22.0,
-                      width: 22.0,
-                    ),
+                  if (result) {
+                    locator
+                        .get<NavigationService>()
+                        .removeAllAndPush(loginRoute);
+                  }
+                },
+                child: RotatedBox(
+                  quarterTurns: 3,
+                  child: SvgPicture.asset(
+                    Assets.logout,
+                    height: 22.0,
+                    width: 22.0,
                   ),
                 ),
-        ],
-      );
-    });
+              ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _buildSearchBar(TextTheme textTheme) {
@@ -151,60 +152,63 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         _notesProvider.fetchAllNotes();
       },
       builder: (NotesProvider _notesProvider) {
-        if (_notesProvider.notesState == NotesState.LOADING) {
+        if (_notesProvider.notesState == NotesState.loading) {
           return Padding(
             padding: EdgeInsets.only(top: screenSize.height * 0.32),
-            child: Center(child: CircularProgressIndicator()),
-          );
-        } else if (_notesProvider.notesState == NotesState.LOADED) {
-          return Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
-              itemCount: _notesProvider.myNotes.length,
-              padding: const EdgeInsets.symmetric(vertical: 22.0),
-              itemBuilder: (BuildContext context, int index) {
-                return NoteCard(
-                  note: _notesProvider.myNotes[index],
-                );
-              },
-            ),
-          );
-        } else if (_notesProvider.notesState == NotesState.NONOTES) {
-          return NoNotesError();
-        } else if (_notesProvider.notesState == NotesState.ERROR) {
-          return Padding(
-            padding: EdgeInsets.only(top: screenSize.height * 0.32),
-            child: Text('Something went wrong !'),
-          );
-        } else if (_notesProvider.notesState == NotesState.SEARCHING) {
-          return Padding(
-            padding: EdgeInsets.only(top: screenSize.height * 0.32),
-            child: Center(
+            child: const Center(
               child: CircularProgressIndicator(),
             ),
           );
-        } else if (_notesProvider.notesState == NotesState.SEARCHED) {
+        } else if (_notesProvider.notesState == NotesState.loaded) {
           return Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
-              itemCount: _notesProvider.searchedNotes.length,
+              physics: const BouncingScrollPhysics(),
+              itemCount: _notesProvider.myNotes!.length,
               padding: const EdgeInsets.symmetric(vertical: 22.0),
               itemBuilder: (BuildContext context, int index) {
                 return NoteCard(
-                  note: _notesProvider.searchedNotes[index],
+                  note: _notesProvider.myNotes![index],
                 );
               },
             ),
           );
-        } else if (_notesProvider.notesState == NotesState.SEARCHEMPTY) {
+        } else if (_notesProvider.notesState == NotesState.noNotes) {
+          return NoNotesError();
+        } else if (_notesProvider.notesState == NotesState.error) {
+          return Padding(
+            padding: EdgeInsets.only(top: screenSize.height * 0.32),
+            child: const Text('Something went wrong !'),
+          );
+        } else if (_notesProvider.notesState == NotesState.searching) {
+          return Padding(
+            padding: EdgeInsets.only(top: screenSize.height * 0.32),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (_notesProvider.notesState == NotesState.searched) {
+          final searchedNotes = _notesProvider.searchedNotes!.toSet().toList();
+          return Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemCount: searchedNotes.length,
+              padding: const EdgeInsets.symmetric(vertical: 22.0),
+              itemBuilder: (BuildContext context, int index) {
+                return NoteCard(
+                  note: searchedNotes[index],
+                );
+              },
+            ),
+          );
+        } else if (_notesProvider.notesState == NotesState.searchEmpty) {
           return Padding(
             padding: EdgeInsets.only(top: screenSize.height * 0.3),
-            child: Center(child: Text('Nothing Found !')),
+            child: const Center(child: Text('Nothing Found !')),
           );
         }
-        return SizedBox.shrink();
+        return const SizedBox.shrink();
       },
     );
   }

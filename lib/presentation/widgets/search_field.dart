@@ -19,12 +19,11 @@ class SearchField extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(52.0),
         border: Border.all(
-          color: MyNotesTheme.FONT_LIGHT_COLOR,
+          color: MyNotesTheme.fontLightColor,
           width: 2.0,
         ),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           //input field
           Flexible(
@@ -40,7 +39,7 @@ class SearchField extends StatelessWidget {
           ),
           //search icon
           SvgPicture.asset(
-            Assets.SEARCH,
+            Assets.search,
             height: 22.0,
             width: 22.0,
           )

@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
 
-import './locator.dart';
 import '../../providers/providers.dart';
+import './locator.dart';
 
 void initProviders() {
   //auth Provider
-  AuthProvider authProvider = Get.put(AuthProvider());
+  final AuthProvider authProvider = Get.put(AuthProvider());
   locator.registerLazySingleton(() => authProvider);
 
   //notes Provider
-  NotesProvider notesProvider = Get.put(NotesProvider());
+  final NotesProvider notesProvider = Get.put(NotesProvider());
   locator.registerLazySingleton(() => notesProvider);
 }

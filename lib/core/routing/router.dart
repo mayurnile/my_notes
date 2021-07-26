@@ -1,47 +1,51 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_notes/core/models/models.dart';
 
-import './route_names.dart';
 import '../../presentation/screens/screens.dart';
 import '../../providers/providers.dart';
+import './route_names.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case '/':
-      AuthProvider _authProvider = Get.find();
-      User? user = _authProvider.firebaseAuth.currentUser;
+      final AuthProvider _authProvider = Get.find();
+      final User? user = _authProvider.firebaseAuth.currentUser;
       if (user != null) {
         return _getPageRoute(HomeScreen(), settings);
       }
       return _getPageRoute(LoginScreen(), settings);
-    case LOGIN_ROUTE:
+    case loginRoute:
       return _getPageRoute(LoginScreen(), settings);
-    case SIGNUP_ROUTE:
+    case signupRoute:
       return _getPageRoute(SignupScreen(), settings);
-    case HOME_ROUTE:
+    case homeRoute:
       return _getPageRoute(HomeScreen(), settings);
-    case ADD_NOTE_ROUTE:
-      final Map<String, dynamic> args =
-          settings.arguments as Map<String, dynamic>;
-      if (args['isEdit'])
+    case addNoteRoute:
+      final Map<String, dynamic>? args =
+          settings.arguments as Map<String, dynamic>?;
+      if (args != null && args['isEdit'] == true) {
+        final Note note = args['note'] as Note;
         return _getPageRoute(
           AddNotescreen(
             isEdit: true,
-            note: args['note'],
+            note: note,
           ),
           settings,
         );
+      }
       return _getPageRoute(
-        AddNotescreen(isEdit: false),
+        const AddNotescreen(isEdit: false),
         settings,
       );
-    case VIEW_NOTE_ROUTE:
-      final Map<String, dynamic> args =
-          settings.arguments as Map<String, dynamic>;
+    case viewNoteRoute:
+      final Map<String, dynamic>? args =
+          settings.arguments as Map<String, dynamic>?;
+      final Note note = args!['note'] as Note;
       return _getPageRoute(
         ViewNoteScreen(
-          viewNote: args['note'],
+          viewNote: note,
         ),
         settings,
       );

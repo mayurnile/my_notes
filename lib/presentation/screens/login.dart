@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../core/core.dart';
-import '../widgets/widgets.dart';
 import '../../providers/providers.dart';
+import '../widgets/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
   // final AuthProvider _authProvider = Get.find();
@@ -22,7 +22,6 @@ class LoginScreen extends StatelessWidget {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 //spacing
@@ -51,7 +50,6 @@ class LoginScreen extends StatelessWidget {
 
   Widget _buildWelcomeText(Size screenSize, TextTheme textTheme) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         //title
         SizedBox(
@@ -80,93 +78,95 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget _buildLoginForm(Size screenSize, TextTheme textTheme) {
-    return GetBuilder<AuthProvider>(builder: (AuthProvider _authProvider) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 22.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              //email input
-              MyTextField(
-                key: ValueKey('email'),
-                hint: 'Enter Email',
-                inputType: TextInputType.emailAddress,
-                onSaved: (String? value) {
-                  if (value != null) _authProvider.setEmail = value.trim();
-                },
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r"\s")),
-                ],
-                validator: (String? value) {
-                  if (value != null && value.trim().length == 0) {
-                    return 'This field cannot be empty !';
-                  }
-                  if (value != null &&
-                      !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                          .hasMatch(value.trim())) {
-                    return 'Please enter a valid email !';
-                  }
-                  return null;
-                },
-              ),
-              //spacing
-              SizedBox(
-                height: screenSize.height * 0.02,
-              ),
-              //password input
-              MyTextField(
-                key: ValueKey('password'),
-                hint: 'Password',
-                inputType: TextInputType.visiblePassword,
-                obscureText: _authProvider.showPassword,
-                isError: _authProvider.authState == AuthState.ERROR,
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny(RegExp(r"\s")),
-                ],
-                suffix: IconButton(
-                  icon: Icon(
-                    _authProvider.showPassword
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                  ),
-                  color: _authProvider.authState == AuthState.ERROR
-                      ? MyNotesTheme.FONT_LIGHT_COLOR
-                      : MyNotesTheme.FONT_DARK_COLOR,
-                  onPressed: _authProvider.toggleShowPassword,
+    return GetBuilder<AuthProvider>(
+      builder: (AuthProvider _authProvider) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                //email input
+                MyTextField(
+                  key: const ValueKey('email'),
+                  hint: 'Enter Email',
+                  inputType: TextInputType.emailAddress,
+                  onSaved: (String? value) {
+                    if (value != null) _authProvider.email = value.trim();
+                  },
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r"\s")),
+                  ],
+                  validator: (String? value) {
+                    if (value != null && value.trim().isEmpty) {
+                      return 'This field cannot be empty !';
+                    }
+                    if (value != null &&
+                        !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
+                            .hasMatch(value.trim())) {
+                      return 'Please enter a valid email !';
+                    }
+                    return null;
+                  },
                 ),
-                onSaved: (String? value) {
-                  if (value != null) _authProvider.setPassword = value.trim();
-                },
-                validator: (String? value) {
-                  if (value != null && value.trim().length == 0) {
-                    return 'This field cannot be empty !';
-                  }
-                },
-              ),
-              //spacing
-              SizedBox(
-                height: screenSize.height * 0.02,
-              ),
-              //login button
-              _authProvider.authState == AuthState.AUTHENTICATING
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : ElevatedButton(
-                      onPressed: () => _login(_authProvider),
-                      child: Text(
-                        'Login',
-                        style:
-                            textTheme.headline4!.copyWith(color: Colors.white),
-                      ),
+                //spacing
+                SizedBox(
+                  height: screenSize.height * 0.02,
+                ),
+                //password input
+                MyTextField(
+                  key: const ValueKey('password'),
+                  hint: 'Password',
+                  inputType: TextInputType.visiblePassword,
+                  obscureText: _authProvider.showPassword,
+                  isError: _authProvider.authState == AuthState.error,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r"\s")),
+                  ],
+                  suffix: IconButton(
+                    icon: Icon(
+                      _authProvider.showPassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                     ),
-            ],
+                    color: _authProvider.authState == AuthState.error
+                        ? MyNotesTheme.fontLightColor
+                        : MyNotesTheme.fontDarkColor,
+                    onPressed: _authProvider.toggleShowPassword,
+                  ),
+                  onSaved: (String? value) {
+                    if (value != null) _authProvider.password = value.trim();
+                  },
+                  validator: (String? value) {
+                    if (value != null && value.trim().isEmpty) {
+                      return 'This field cannot be empty !';
+                    }
+                  },
+                ),
+                //spacing
+                SizedBox(
+                  height: screenSize.height * 0.02,
+                ),
+                //login button
+                if (_authProvider.authState == AuthState.authenticating)
+                  const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                else
+                  ElevatedButton(
+                    onPressed: () => _login(_authProvider),
+                    child: Text(
+                      'Login',
+                      style: textTheme.headline4!.copyWith(color: Colors.white),
+                    ),
+                  ),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Widget _buildSignupOption(Size screenSize, TextTheme textTheme) {
@@ -176,19 +176,19 @@ class LoginScreen extends StatelessWidget {
         child: Row(
           children: [
             Text(
-              'I\'m a new user,' + ' ',
-              key: ValueKey('signup_text'),
+              "I'm a new user ",
+              key: const ValueKey('signup_text'),
               style: textTheme.bodyText1,
             ),
             InkWell(
               onTap: () => locator
                   .get<NavigationService>()
-                  .removeAllAndPush(SIGNUP_ROUTE),
-              key: ValueKey('signup_button'),
+                  .removeAllAndPush(signupRoute),
+              key: const ValueKey('signup_button'),
               child: Text(
                 'Signup',
                 style: textTheme.bodyText1!.copyWith(
-                  color: MyNotesTheme.PRIMARY_COLOR,
+                  color: MyNotesTheme.primaryColor,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -199,7 +199,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  void _login(AuthProvider _authProvider) async {
+  Future<void> _login(AuthProvider _authProvider) async {
     final form = _formKey.currentState;
 
     if (form!.validate()) {
@@ -207,12 +207,12 @@ class LoginScreen extends StatelessWidget {
 
       final result = await _authProvider.login(
         auth: _authProvider.firebaseAuth,
-        email: _authProvider.email,
-        password: _authProvider.password,
+        email: _authProvider.email != null ? _authProvider.email! : '',
+        password: _authProvider.password != null ? _authProvider.password! : '',
       );
 
       if (result) {
-        locator.get<NavigationService>().navigateToReplacement(HOME_ROUTE);
+        locator.get<NavigationService>().navigateToReplacement(homeRoute);
         Fluttertoast.showToast(msg: 'Login Success!');
       } else {
         Fluttertoast.showToast(msg: 'Something went wrong!');

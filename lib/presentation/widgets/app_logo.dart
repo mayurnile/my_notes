@@ -11,11 +11,10 @@ class AppLogo extends StatelessWidget {
 
     return Center(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           //logo
           SvgPicture.asset(
-            Assets.LOGO,
+            Assets.logo,
             width: screenSize.width * 0.25,
           ),
           //title

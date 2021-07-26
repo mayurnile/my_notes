@@ -6,7 +6,7 @@ class OptionButton extends StatelessWidget {
   final String? title;
   final void Function()? onPressed;
 
-  OptionButton({
+  const OptionButton({
     Key? key,
     required this.icon,
     required this.title,
@@ -20,8 +20,6 @@ class OptionButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 12.0),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             //icon
             SvgPicture.asset(
@@ -30,7 +28,7 @@ class OptionButton extends StatelessWidget {
               width: 22.0,
             ),
             //spacing
-            SizedBox(width: 16.0),
+            const SizedBox(width: 16.0),
             //title
             Text(
               title!,

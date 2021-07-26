@@ -14,10 +14,10 @@ import '../../providers/notes_provider.dart';
 class ViewNoteScreen extends StatelessWidget {
   final Note viewNote;
 
-  ViewNoteScreen({
+  const ViewNoteScreen({
     Key? key,
     required this.viewNote,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ViewNoteScreen extends StatelessWidget {
       child: Scaffold(
         body: SafeArea(
           child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(22.0, 12.0, 22.0, 0.0),
               child: Column(
@@ -56,20 +56,18 @@ class ViewNoteScreen extends StatelessWidget {
 
   Widget _buildAppBar(TextTheme textTheme) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         //back button
         InkWell(
           onTap: () => locator.get<NavigationService>().navigateBack(),
           child: SvgPicture.asset(
-            Assets.BACK,
+            Assets.back,
             width: 32.0,
             height: 32.0,
           ),
         ),
         //spacing
-        SizedBox(width: 18.0),
+        const SizedBox(width: 18.0),
         //title
         Text(
           'View Note',
@@ -84,14 +82,14 @@ class ViewNoteScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         //spacing
-        SizedBox(height: 22.0),
+        const SizedBox(height: 22.0),
         //title
         Text(
           viewNote.title,
           style: textTheme.headline4,
         ),
         //spacing
-        SizedBox(height: 4.0),
+        const SizedBox(height: 4.0),
         //description
         Text(
           viewNote.description,
@@ -117,7 +115,7 @@ class ViewNoteScreen extends StatelessWidget {
               ),
             ),
           )
-        : SizedBox.shrink();
+        : const SizedBox.shrink();
   }
 
   Widget _buildActions(Size screenSize, TextTheme textTheme) {
@@ -125,7 +123,7 @@ class ViewNoteScreen extends StatelessWidget {
       width: screenSize.width,
       child: ElevatedButton(
         onPressed: () async {
-          NotesProvider _notesProvider = Get.find();
+         final NotesProvider _notesProvider = Get.find();
           File? image;
           if (viewNote.imagePath != null) {
             image = await urlToFile(viewNote.imagePath!);
@@ -147,11 +145,12 @@ class ViewNoteScreen extends StatelessWidget {
   }
 
   Future<File> urlToFile(String imageUrl) async {
-    var rng = new Random();
-    Directory tempDir = await getTemporaryDirectory();
-    String tempPath = tempDir.path;
-    File file = new File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
-    http.Response response = await http.get(Uri.parse(imageUrl));
+    final rng = Random();
+    final Directory tempDir = await getTemporaryDirectory();
+    final String tempPath = tempDir.path;
+    // final File file = File('$tempPath' + (rng.nextInt(100)).toString() + '.png');
+    final File file = File("$tempPath${rng.nextInt(100)}.png");
+    final http.Response response = await http.get(Uri.parse(imageUrl));
     await file.writeAsBytes(response.bodyBytes);
     return file;
   }

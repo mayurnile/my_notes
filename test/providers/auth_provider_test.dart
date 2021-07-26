@@ -10,10 +10,10 @@ import './auth_provider_test.mocks.dart';
 @GenerateMocks([FirebaseAuth])
 @GenerateMocks([User])
 void main() {
-  MockFirebaseAuth _auth = MockFirebaseAuth();
-  AuthProvider _authProvider = AuthProvider();
-  MockUserCredential _userCredential = MockUserCredential();
-  MockUser _user = MockUser();
+  final MockFirebaseAuth _auth = MockFirebaseAuth();
+  final AuthProvider _authProvider = AuthProvider();
+  final MockUserCredential _userCredential = MockUserCredential();
+  final MockUser _user = MockUser();
 
   group(
     "User Login Test",
@@ -37,11 +37,11 @@ void main() {
           ).thenReturn(_user);
 
           //Arrange
-          String _email = "email";
-          String _password = "password";
+          const String _email = "email";
+          const String _password = "password";
 
           //Act
-          bool result = await _authProvider.login(
+          final bool result = await _authProvider.login(
             auth: _auth,
             email: _email,
             password: _password,
@@ -49,7 +49,7 @@ void main() {
 
           //Assert
           expect(result, true);
-          expect(_authProvider.authState, AuthState.AUTHENTICATED);
+          expect(_authProvider.authState, AuthState.authenticated);
         },
       );
 
@@ -72,11 +72,11 @@ void main() {
           ).thenReturn(_user);
 
           //Arrange
-          String _email = "email";
-          String _password = "pass123";
+          const String _email = "email";
+          const String _password = "pass123";
 
           //Act
-          bool result = await _authProvider.login(
+          final bool result = await _authProvider.login(
             auth: _auth,
             email: _email,
             password: _password,
@@ -84,7 +84,7 @@ void main() {
 
           //Assert
           expect(result, false);
-          expect(_authProvider.authState, AuthState.UNAUTHENTICATED);
+          expect(_authProvider.authState, AuthState.unauthenticated);
         },
       );
 
@@ -107,11 +107,11 @@ void main() {
           ).thenReturn(_user);
 
           //Arrange
-          String _email = "email";
-          String _password = "password";
+          const String _email = "email";
+          const String _password = "password";
 
           //Act
-          bool result = await _authProvider.signup(
+          final bool result = await _authProvider.signup(
             auth: _auth,
             email: _email,
             password: _password,
@@ -119,7 +119,7 @@ void main() {
 
           //Assert
           expect(result, true);
-          expect(_authProvider.authState, AuthState.AUTHENTICATED);
+          expect(_authProvider.authState, AuthState.authenticated);
         },
       );
 
@@ -142,11 +142,11 @@ void main() {
           ).thenReturn(_user);
 
           //Arrange
-          String _email = "ema1l";
-          String _password = "password";
+          const String _email = "ema1l";
+          const String _password = "password";
 
           //Act
-          bool result = await _authProvider.signup(
+          final bool result = await _authProvider.signup(
             auth: _auth,
             email: _email,
             password: _password,
@@ -154,7 +154,7 @@ void main() {
 
           //Assert
           expect(result, false);
-          expect(_authProvider.authState, AuthState.UNAUTHENTICATED);
+          expect(_authProvider.authState, AuthState.unauthenticated);
         },
       );
 
@@ -167,11 +167,11 @@ void main() {
           ).thenAnswer((_) => Future.value());
 
           //Act
-          bool result = await _authProvider.logout(auth: _auth);
+          final bool result = await _authProvider.logout(auth: _auth);
 
           //Asset
           expect(result, true);
-          expect(_authProvider.authState, AuthState.UNAUTHENTICATED);
+          expect(_authProvider.authState, AuthState.unauthenticated);
         },
       );
     },

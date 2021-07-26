@@ -12,7 +12,7 @@ import './widgets.dart';
 class NoteCard extends StatelessWidget {
   final Note note;
 
-  NoteCard({
+  const NoteCard({
     Key? key,
     required this.note,
   }) : super(key: key);
@@ -26,7 +26,7 @@ class NoteCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 6.0),
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: MyNotesTheme.CARD_COLOR,
+        color: MyNotesTheme.cardColor,
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
@@ -35,7 +35,7 @@ class NoteCard extends StatelessWidget {
           //title bar
           _buildTitleBar(context, textTheme),
           //spacing
-          SizedBox(height: 4.0),
+          const SizedBox(height: 4.0),
           //description
           Text(
             note.description,
@@ -44,7 +44,7 @@ class NoteCard extends StatelessWidget {
             ),
           ),
           //spacing
-          SizedBox(height: 8.0),
+          const SizedBox(height: 8.0),
           //image
           _buildImage(screenSize),
           //time
@@ -56,7 +56,6 @@ class NoteCard extends StatelessWidget {
 
   Widget _buildTitleBar(BuildContext context, TextTheme textTheme) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         //title
@@ -69,9 +68,9 @@ class NoteCard extends StatelessWidget {
           onPressed: () => _showOptions(context, textTheme),
           padding: const EdgeInsets.all(0.0),
           alignment: Alignment.centerRight,
-          icon: Icon(
+          icon: const Icon(
             Icons.more_horiz,
-            color: MyNotesTheme.PRIMARY_COLOR,
+            color: MyNotesTheme.primaryColor,
             size: 24.0,
           ),
         ),
@@ -81,14 +80,14 @@ class NoteCard extends StatelessWidget {
 
   Widget _buildRecordTime(TextTheme textTheme) {
     String recordTime = '';
-    DateTime now = DateTime.now();
+    final DateTime now = DateTime.now();
 
-    Duration duration = now.difference(note.createdTime);
+    final Duration duration = now.difference(note.createdTime);
 
-    if (duration > Duration(hours: 5)) {
-      DateFormat formatter = DateFormat('d MMM, y');
+    if (duration > const Duration(hours: 5)) {
+      final DateFormat formatter = DateFormat('d MMM, y');
       recordTime = formatter.format(note.createdTime);
-    } else if (duration > Duration(minutes: 59)) {
+    } else if (duration > const Duration(minutes: 59)) {
       recordTime = '${duration.inHours} hour ago';
     } else {
       recordTime = '${duration.inMinutes} min ago';
@@ -101,8 +100,8 @@ class NoteCard extends StatelessWidget {
   }
 
   Widget _buildImage(Size screenSize) {
-    return note.imagePath!.length == 0
-        ? SizedBox.shrink()
+    return note.imagePath!.isEmpty
+        ? const SizedBox.shrink()
         : Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),
             child: SizedBox(
@@ -126,7 +125,7 @@ class NoteCard extends StatelessWidget {
       builder: (BuildContext ctx) {
         return Container(
           padding: const EdgeInsets.all(22.0),
-          decoration: BoxDecoration(
+          decoration:const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12.0),
@@ -143,14 +142,14 @@ class NoteCard extends StatelessWidget {
                 style: textTheme.headline3,
               ),
               //spacing
-              SizedBox(height: 12.0),
+              const SizedBox(height: 12.0),
               //options
               OptionButton(
-                icon: Assets.EDIT,
+                icon: Assets.edit,
                 title: 'Edit',
                 onPressed: () {
                   locator.get<NavigationService>().navigateToNamed(
-                    ADD_NOTE_ROUTE,
+                    addNoteRoute,
                     arguments: {
                       'note': note,
                       'isEdit': true,
@@ -159,33 +158,33 @@ class NoteCard extends StatelessWidget {
                 },
               ),
               //divider
-              Divider(
-                color: MyNotesTheme.FONT_LIGHT_COLOR,
+              const Divider(
+                color: MyNotesTheme.fontLightColor,
                 indent: 32.0,
                 endIndent: 32.0,
               ),
               OptionButton(
-                icon: Assets.SHARE,
+                icon: Assets.share,
                 title: 'Share',
                 onPressed: () async {
-                  NotesProvider _notesProvider = Get.find();
-                  var url = await _notesProvider.shareNote(noteID: note.id!);
+                  final NotesProvider _notesProvider = Get.find();
+                  final url = await _notesProvider.shareNote(noteID: note.id!);
                   Navigator.of(context).pop();
 
                   Share.share('Hey checkout my note:\n $url');
                 },
               ),
               //divider
-              Divider(
-                color: MyNotesTheme.FONT_LIGHT_COLOR,
+              const Divider(
+                color: MyNotesTheme.fontLightColor,
                 indent: 32.0,
                 endIndent: 32.0,
               ),
               OptionButton(
-                icon: Assets.REMOVE,
+                icon: Assets.remove,
                 title: 'Remove',
                 onPressed: () async {
-                  NotesProvider _notesProvider = Get.find();
+                  final NotesProvider _notesProvider = Get.find();
                   final result =
                       await _notesProvider.removeNote(noteId: note.id!);
 

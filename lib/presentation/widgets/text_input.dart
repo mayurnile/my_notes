@@ -24,7 +24,7 @@ class MyTextField extends StatelessWidget {
   final bool isError;
   final String? errorText;
 
-  MyTextField({
+  const MyTextField({
     this.label,
     required this.hint,
     required this.inputType,
@@ -60,20 +60,20 @@ class MyTextField extends StatelessWidget {
             if (label != null)
               Text(
                 label!,
-                key: ValueKey('label'),
+                key: const ValueKey('label'),
                 style: textTheme.headline6,
               ),
             //spacing
-            Spacer(),
+            const Spacer(),
             //action
             if (action != null) action!,
           ],
         ),
         //spacing
-        SizedBox(height: 6.0),
+        const SizedBox(height: 6.0),
         //textfield
         AnimatedContainer(
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           padding: const EdgeInsets.symmetric(vertical: 2.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6.0),
@@ -83,8 +83,8 @@ class MyTextField extends StatelessWidget {
             style: textTheme.headline5!.copyWith(
               fontWeight: FontWeight.w700,
               color: isError
-                  ? MyNotesTheme.ERROR_COLOR
-                  : MyNotesTheme.FONT_DARK_COLOR,
+                  ? MyNotesTheme.errorColor
+                  : MyNotesTheme.fontDarkColor,
               fontSize: 14.0,
               letterSpacing: obscureText ? 5.0 : 0.8,
             ),
@@ -103,22 +103,20 @@ class MyTextField extends StatelessWidget {
               errorText: errorText,
               hintText: hint,
               hintStyle: textTheme.headline5,
-              errorStyle: TextStyle(
+              errorStyle: const TextStyle(
                 color: Color(0xFFFF3F34),
                 fontWeight: FontWeight.w500,
                 fontSize: 14.0,
               ),
-              enabledBorder: OutlineInputBorder(
+              enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: MyNotesTheme.FONT_LIGHT_COLOR,
-                  width: 1.0,
+                  color: MyNotesTheme.fontLightColor,
                 ),
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(6.0),
-                borderSide: BorderSide(
-                  color: MyNotesTheme.FONT_LIGHT_COLOR,
-                  width: 1.0,
+                borderSide: const BorderSide(
+                  color: MyNotesTheme.fontLightColor,
                 ),
               ),
               suffixIcon: suffix,
