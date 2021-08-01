@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -68,7 +69,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             child: RefreshIndicator(
               onRefresh: () async {
                 final NotesProvider _notesProvider = Get.find();
-                _notesProvider.fetchAllNotes();
+                final AuthProvider _authProvider = Get.find();
+                final User? user = _authProvider.firebaseAuth.currentUser;
+                final String userId = user!.uid;
+                _notesProvider.fetchAllNotes(
+                  firestore: _notesProvider.firestore,
+                  userId: userId,
+                );
               },
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(22.0, 12.0, 22.0, 0.0),
@@ -149,7 +156,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return GetBuilder<NotesProvider>(
       initState: (_) {
         final NotesProvider _notesProvider = Get.find();
-        _notesProvider.fetchAllNotes();
+        final AuthProvider _authProvider = Get.find();
+        final User? user = _authProvider.firebaseAuth.currentUser;
+        final String userId = user!.uid;
+        _notesProvider.fetchAllNotes(
+          firestore: _notesProvider.firestore,
+          userId: userId,
+        );
       },
       builder: (NotesProvider _notesProvider) {
         if (_notesProvider.notesState == NotesState.loading) {

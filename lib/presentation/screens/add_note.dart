@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:my_notes/core/core.dart';
 import 'package:my_notes/core/models/models.dart';
 import 'package:my_notes/presentation/widgets/widgets.dart';
+import 'package:my_notes/providers/auth_provider.dart';
 import 'package:my_notes/providers/notes_provider.dart';
 
 class AddNotescreen extends StatefulWidget {
@@ -214,8 +215,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                         //text
                         Text(
                           'Attach Image',
-                          style: textTheme.headline5!
-                              .copyWith(color: Colors.black),
+                          style: textTheme.headline5!.copyWith(color: Colors.black),
                         ),
                       ],
                     ),
@@ -238,8 +238,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                         //text
                         Text(
                           'Remove Image',
-                          style: textTheme.headline5!
-                              .copyWith(color: Colors.black),
+                          style: textTheme.headline5!.copyWith(color: Colors.black),
                         ),
                       ],
                     ),
@@ -264,8 +263,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                         //text
                         Text(
                           'Attach Image',
-                          style: textTheme.headline5!
-                              .copyWith(color: Colors.black),
+                          style: textTheme.headline5!.copyWith(color: Colors.black),
                         ),
                       ],
                     ),
@@ -288,8 +286,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                         //text
                         Text(
                           'Remove Image',
-                          style: textTheme.headline5!
-                              .copyWith(color: Colors.black),
+                          style: textTheme.headline5!.copyWith(color: Colors.black),
                         ),
                       ],
                     ),
@@ -355,8 +352,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                 icon: Assets.gallery,
                 title: 'Pick From Gallery',
                 onPressed: () async {
-                  final pickedFile =
-                      await _imagePicker.getImage(source: ImageSource.gallery);
+                  final pickedFile = await _imagePicker.getImage(source: ImageSource.gallery);
 
                   setState(() {
                     if (pickedFile != null) {
@@ -377,8 +373,7 @@ class _AddNotescreenState extends State<AddNotescreen> {
                 icon: Assets.camera,
                 title: 'Capture Now',
                 onPressed: () async {
-                  final pickedFile =
-                      await _imagePicker.getImage(source: ImageSource.camera);
+                  final pickedFile = await _imagePicker.getImage(source: ImageSource.camera);
 
                   setState(() {
                     if (pickedFile != null) {
@@ -437,7 +432,11 @@ class _AddNotescreenState extends State<AddNotescreen> {
           Fluttertoast.showToast(msg: 'Something went wrong !');
         }
       } else {
+        final AuthProvider _authProvider = Get.find();
+        
         final result = await _notesProvider.createNewNote(
+          firestore: _notesProvider.firestore,
+          userId: _authProvider.email ?? '',
           title: _title!,
           description: _description!,
           image: _image,

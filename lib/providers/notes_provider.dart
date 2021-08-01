@@ -32,22 +32,20 @@ class NotesProvider extends GetxController {
     _state = NotesState.loading;
   }
 
+  //getters
+  FirebaseFirestore get firestore => _firestore;
   List<Note>? get myNotes => _myNotes;
   NotesState get notesState => _state;
   List<Note>? get searchedNotes => _searchedNotes;
 
-  Future<void> fetchAllNotes() async {
+  Future<void> fetchAllNotes({
+    required FirebaseFirestore firestore,
+    required String userId,
+  }) async {
     _myNotes = [];
-    final AuthProvider _authProvider = Get.find();
-    final User? user = _authProvider.firebaseAuth.currentUser;
-    final String userId = user!.uid;
-
-    // _state = NotesState.loading;
-    // update();
 
     try {
-      final CollectionReference collectionReference =
-          _firestore.collection('users').doc(userId).collection('notes');
+      final CollectionReference collectionReference = firestore.collection('users').doc(userId).collection('notes');
 
       final QuerySnapshot queryData = await collectionReference.get();
 
@@ -56,12 +54,10 @@ class NotesProvider extends GetxController {
         update();
       } else {
         for (final snapshot in queryData.docs) {
-          final Map<String, dynamic>? data =
-              snapshot.data() as Map<String, dynamic>?;
+          final Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
           final Note myNote = Note.fromJSON(data!, snapshot.id);
           _myNotes!.add(myNote);
         }
-        // queryData.docs.forEach((snapshot) {});
 
         _myNotes!.sort((a, b) => a.createdTime.isAfter(b.createdTime) ? 0 : 1);
         _state = NotesState.loaded;
@@ -75,19 +71,12 @@ class NotesProvider extends GetxController {
 
   ///[Method for Creating a New Note]
   Future<bool> createNewNote({
+    required FirebaseFirestore firestore,
+    required String userId,
     required String title,
     required String description,
     File? image,
   }) async {
-    final AuthProvider _authProvider = Get.find();
-    final User? user = _authProvider.firebaseAuth.currentUser;
-    String? userId = '';
-    if (user != null) {
-      userId = user.uid;
-    } else {
-      return false;
-    }
-
     try {
       String imageUrl = '';
 
@@ -95,15 +84,12 @@ class NotesProvider extends GetxController {
         imageUrl = await _uploadFile(image: image, userId: userId);
       }
 
-      final DocumentReference userDocument =
-          _firestore.collection('users').doc(userId);
+      final DocumentReference userDocument = firestore.collection('users').doc(userId);
 
       final List<String> _searchParameters = [];
       final temp = StringBuffer();
-      // String temp = "";
 
       for (int i = 0; i < title.trim().length; i++) {
-        // temp += title[i];
         temp.write(title[i]);
         _searchParameters.add(temp.toString());
       }
@@ -117,7 +103,10 @@ class NotesProvider extends GetxController {
       );
 
       await userDocument.collection('notes').doc().set(Note.toJSON(newNote));
-      fetchAllNotes();
+      fetchAllNotes(
+        firestore: firestore,
+        userId: userId,
+      );
       return true;
     } catch (_) {
       return false;
@@ -136,14 +125,13 @@ class NotesProvider extends GetxController {
     }
 
     try {
-      final DocumentReference userDocument = _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('notes')
-          .doc(noteId);
+      final DocumentReference userDocument = _firestore.collection('users').doc(userId).collection('notes').doc(noteId);
 
       await userDocument.delete();
-      fetchAllNotes();
+      fetchAllNotes(
+        firestore: firestore,
+        userId: userId,
+      );
       return true;
     } catch (_) {
       return false;
@@ -162,11 +150,7 @@ class NotesProvider extends GetxController {
     }
 
     try {
-      final DocumentReference userDocument = _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('notes')
-          .doc(editedNote.id);
+      final DocumentReference userDocument = _firestore.collection('users').doc(userId).collection('notes').doc(editedNote.id);
 
       String? imageUrl;
       if (image != null) {
@@ -195,7 +179,10 @@ class NotesProvider extends GetxController {
 
       userDocument.update(Note.toJSON(newNote));
 
-      fetchAllNotes();
+      fetchAllNotes(
+        firestore: firestore,
+        userId: userId,
+      );
       return true;
     } catch (_) {
       return false;
@@ -223,21 +210,15 @@ class NotesProvider extends GetxController {
         return;
       }
 
-      final List<DocumentSnapshot> documentList = (await _firestore
-              .collection('users')
-              .doc(userId)
-              .collection('notes')
-              .where('searchParameters', arrayContains: searchString)
-              .get())
-          .docs;
+      final List<DocumentSnapshot> documentList =
+          (await _firestore.collection('users').doc(userId).collection('notes').where('searchParameters', arrayContains: searchString).get()).docs;
 
       if (documentList.isEmpty) {
         _state = NotesState.searchEmpty;
         update();
       } else {
         for (final snapshot in documentList) {
-          final Map<String, dynamic>? data =
-              snapshot.data() as Map<String, dynamic>?;
+          final Map<String, dynamic>? data = snapshot.data() as Map<String, dynamic>?;
           final Note myNote = Note.fromJSON(data!, snapshot.id);
           _searchedNotes!.add(myNote);
         }
@@ -272,8 +253,7 @@ class NotesProvider extends GetxController {
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://mynotess.page.link',
-      link: Uri.parse(
-          'https://mynotess.page.link.com/?id=$userId&noteId=$noteID'),
+      link: Uri.parse('https://mynotess.page.link.com/?id=$userId&noteId=$noteID'),
       androidParameters: AndroidParameters(
         packageName: 'com.example.my_notes',
         minimumVersion: 1,
@@ -287,8 +267,7 @@ class NotesProvider extends GetxController {
   ///[Method for displaying visited link]
   Future<void> retrieveDynamicLink(BuildContext context) async {
     try {
-      final PendingDynamicLinkData? data =
-          await FirebaseDynamicLinks.instance.getInitialLink();
+      final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
       final Uri? deepLink = data?.link;
 
       if (deepLink != null) {
@@ -337,20 +316,13 @@ class NotesProvider extends GetxController {
   }
 
   ///[Method to fetch a specific note by it's ID]
-  Future<Note?> fetchNoteById(
-      {required String userId, required String noteId}) async {
+  Future<Note?> fetchNoteById({required String userId, required String noteId}) async {
     try {
-      final DocumentSnapshot documentSnapshot = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('notes')
-          .doc(noteId)
-          .get();
+      final DocumentSnapshot documentSnapshot = await _firestore.collection('users').doc(userId).collection('notes').doc(noteId).get();
 
       Note? fetchedNote;
       if (documentSnapshot.data() != null) {
-        final Map<String, dynamic>? data =
-            documentSnapshot.data() as Map<String, dynamic>?;
+        final Map<String, dynamic>? data = documentSnapshot.data() as Map<String, dynamic>?;
         fetchedNote = Note.fromJSON(data!, noteId);
       }
 
@@ -361,12 +333,9 @@ class NotesProvider extends GetxController {
   }
 
   ///[Method for uploading file to storage]
-  Future<String> _uploadFile(
-      {required File image, required String userId}) async {
+  Future<String> _uploadFile({required File image, required String userId}) async {
     // String returnURL;
-    final Reference storageReference = _firebaseStorage
-        .ref()
-        .child('images/$userId/${image.path.split('/').last}');
+    final Reference storageReference = _firebaseStorage.ref().child('images/$userId/${image.path.split('/').last}');
     final UploadTask uploadTask = storageReference.putFile(image);
     await uploadTask;
     return storageReference.getDownloadURL();
@@ -375,12 +344,4 @@ class NotesProvider extends GetxController {
   }
 }
 
-enum NotesState {
-  loading,
-  loaded,
-  noNotes,
-  error,
-  searching,
-  searched,
-  searchEmpty
-}
+enum NotesState { loading, loaded, noNotes, error, searching, searched, searchEmpty }

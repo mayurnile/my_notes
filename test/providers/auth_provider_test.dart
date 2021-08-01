@@ -87,7 +87,12 @@ void main() {
           expect(_authProvider.authState, AuthState.unauthenticated);
         },
       );
+    },
+  );
 
+  group(
+    'User Signup Test',
+    () {
       test(
         "sign up is successful with email and password",
         () async {
@@ -157,9 +162,14 @@ void main() {
           expect(_authProvider.authState, AuthState.unauthenticated);
         },
       );
+    },
+  );
 
+  group(
+    'Sign out Test',
+    () {
       test(
-        "signout should success",
+        "signout should be success",
         () async {
           //Arrange
           when(

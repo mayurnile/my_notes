@@ -46,7 +46,6 @@ dev_dependencies:
   mockito: ^5.0.11
   rxdart: ^0.27.1
   build_runner: ^2.0.6
-
   flutter_launcher_icons: ^0.9.0
 
 flutter_icons:

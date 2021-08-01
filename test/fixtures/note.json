@@ -1,0 +1,11 @@
+{
+    "id": "id",
+    "title": "title",
+    "description": "description",
+    "image_path": "imagePath",
+    "created_time": "createdTime",
+    "searchParameters": [
+        "param1",
+        "param2"
+    ]
+}

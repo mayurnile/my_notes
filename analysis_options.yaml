@@ -5,6 +5,7 @@ analyzer:
   #Excluding auto generated files for mocking
   exclude:
     - test/providers/auth_provider_test.mocks.dart
+    - test/providers/notes_provider_test.mocks.dart
 
   strong-mode:
     # Will become the default once non-nullable types land

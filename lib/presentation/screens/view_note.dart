@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_notes/providers/auth_provider.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../core/core.dart';
@@ -123,12 +124,15 @@ class ViewNoteScreen extends StatelessWidget {
       width: screenSize.width,
       child: ElevatedButton(
         onPressed: () async {
-         final NotesProvider _notesProvider = Get.find();
+          final NotesProvider _notesProvider = Get.find();
+          final AuthProvider _authProvider = Get.find();
           File? image;
           if (viewNote.imagePath != null) {
             image = await urlToFile(viewNote.imagePath!);
           }
           _notesProvider.createNewNote(
+            firestore: _notesProvider.firestore,
+            userId: _authProvider.email ?? '',
             title: viewNote.title,
             description: viewNote.description,
             image: image,

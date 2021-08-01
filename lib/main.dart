@@ -8,7 +8,6 @@ import './core/di/locator.dart' as di;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // initFirebase();
   di.init();
   runApp(MyNotes());
 }
@@ -24,8 +23,4 @@ class MyNotes extends StatelessWidget {
       onGenerateRoute: generateRoute,
     );
   }
-}
-
-Future<void> initFirebase() async {
-  await Firebase.initializeApp();
 }
