@@ -34,18 +34,19 @@ class NotesProvider extends GetxController {
 
   //getters
   FirebaseFirestore get firestore => _firestore;
+  FirebaseStorage get firebaseStorage => _firebaseStorage;
   List<Note>? get myNotes => _myNotes;
   NotesState get notesState => _state;
   List<Note>? get searchedNotes => _searchedNotes;
 
   Future<void> fetchAllNotes({
     required FirebaseFirestore firestore,
-    required String userId,
+    required String userID,
   }) async {
     _myNotes = [];
 
     try {
-      final CollectionReference collectionReference = firestore.collection('users').doc(userId).collection('notes');
+      final CollectionReference collectionReference = firestore.collection('users').doc(userID).collection('notes');
 
       final QuerySnapshot queryData = await collectionReference.get();
 
@@ -72,7 +73,8 @@ class NotesProvider extends GetxController {
   ///[Method for Creating a New Note]
   Future<bool> createNewNote({
     required FirebaseFirestore firestore,
-    required String userId,
+    required FirebaseStorage firebaseStorage,
+    required String userID,
     required String title,
     required String description,
     File? image,
@@ -81,10 +83,14 @@ class NotesProvider extends GetxController {
       String imageUrl = '';
 
       if (image != null) {
-        imageUrl = await _uploadFile(image: image, userId: userId);
+        imageUrl = await uploadFile(
+          firebaseStorage: firebaseStorage,
+          image: image,
+          userId: userID,
+        );
       }
 
-      final DocumentReference userDocument = firestore.collection('users').doc(userId);
+      final DocumentReference userDocument = firestore.collection('users').doc(userID);
 
       final List<String> _searchParameters = [];
       final temp = StringBuffer();
@@ -105,7 +111,7 @@ class NotesProvider extends GetxController {
       await userDocument.collection('notes').doc().set(Note.toJSON(newNote));
       fetchAllNotes(
         firestore: firestore,
-        userId: userId,
+        userID: userID,
       );
       return true;
     } catch (_) {
@@ -130,7 +136,7 @@ class NotesProvider extends GetxController {
       await userDocument.delete();
       fetchAllNotes(
         firestore: firestore,
-        userId: userId,
+        userID: userId,
       );
       return true;
     } catch (_) {
@@ -154,7 +160,11 @@ class NotesProvider extends GetxController {
 
       String? imageUrl;
       if (image != null) {
-        imageUrl = await _uploadFile(image: image, userId: userId);
+        imageUrl = await uploadFile(
+          firebaseStorage: _firebaseStorage,
+          image: image,
+          userId: userId,
+        );
       } else {
         imageUrl = editedNote.imagePath;
       }
@@ -181,7 +191,7 @@ class NotesProvider extends GetxController {
 
       fetchAllNotes(
         firestore: firestore,
-        userId: userId,
+        userID: userId,
       );
       return true;
     } catch (_) {
@@ -333,14 +343,20 @@ class NotesProvider extends GetxController {
   }
 
   ///[Method for uploading file to storage]
-  Future<String> _uploadFile({required File image, required String userId}) async {
+  Future<String> uploadFile({
+    required FirebaseStorage firebaseStorage,
+    required File image,
+    required String userId,
+  }) async {
     // String returnURL;
-    final Reference storageReference = _firebaseStorage.ref().child('images/$userId/${image.path.split('/').last}');
+    final Reference storageReference = firebaseStorage.ref().child('images/$userId/${image.path.split('/').last}');
     final UploadTask uploadTask = storageReference.putFile(image);
     await uploadTask;
     return storageReference.getDownloadURL();
-    // returnURL = await storageReference.getDownloadURL();
-    // return returnURL;
+    // } catch (e) {
+    //   print(e);
+    //   throw Exception();
+    // }
   }
 }
 

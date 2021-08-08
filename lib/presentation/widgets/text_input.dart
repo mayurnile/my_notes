@@ -82,9 +82,7 @@ class MyTextField extends StatelessWidget {
             controller: controller,
             style: textTheme.headline5!.copyWith(
               fontWeight: FontWeight.w700,
-              color: isError
-                  ? MyNotesTheme.errorColor
-                  : MyNotesTheme.fontDarkColor,
+              color: isError ? MyNotesTheme.errorColor : MyNotesTheme.fontDarkColor,
               fontSize: 14.0,
               letterSpacing: obscureText ? 5.0 : 0.8,
             ),
@@ -107,6 +105,13 @@ class MyTextField extends StatelessWidget {
                 color: Color(0xFFFF3F34),
                 fontWeight: FontWeight.w500,
                 fontSize: 14.0,
+              ),
+              focusColor: MyNotesTheme.primaryColor,
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: MyNotesTheme.primaryColor,
+                  width: 2.0,
+                ),
               ),
               enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(

@@ -295,7 +295,9 @@ class _AddNotescreenState extends State<AddNotescreen> {
         //save button
         if (_isLoading)
           const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(MyNotesTheme.primaryColor),
+            ),
           )
         else
           SizedBox(
@@ -433,10 +435,11 @@ class _AddNotescreenState extends State<AddNotescreen> {
         }
       } else {
         final AuthProvider _authProvider = Get.find();
-        
+
         final result = await _notesProvider.createNewNote(
           firestore: _notesProvider.firestore,
-          userId: _authProvider.email ?? '',
+          firebaseStorage: _notesProvider.firebaseStorage,
+          userID: _authProvider.userId ?? '',
           title: _title!,
           description: _description!,
           image: _image,

@@ -13,6 +13,8 @@ Route<dynamic> generateRoute(RouteSettings settings) {
       final AuthProvider _authProvider = Get.find();
       final User? user = _authProvider.firebaseAuth.currentUser;
       if (user != null) {
+        _authProvider.userId = user.uid;
+        _authProvider.email = user.email;
         return _getPageRoute(HomeScreen(), settings);
       }
       return _getPageRoute(LoginScreen(), settings);
@@ -23,8 +25,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
     case homeRoute:
       return _getPageRoute(HomeScreen(), settings);
     case addNoteRoute:
-      final Map<String, dynamic>? args =
-          settings.arguments as Map<String, dynamic>?;
+      final Map<String, dynamic>? args = settings.arguments as Map<String, dynamic>?;
       if (args != null && args['isEdit'] == true) {
         final Note note = args['note'] as Note;
         return _getPageRoute(
@@ -40,8 +41,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         settings,
       );
     case viewNoteRoute:
-      final Map<String, dynamic>? args =
-          settings.arguments as Map<String, dynamic>?;
+      final Map<String, dynamic>? args = settings.arguments as Map<String, dynamic>?;
       final Note note = args!['note'] as Note;
       return _getPageRoute(
         ViewNoteScreen(
@@ -65,13 +65,8 @@ class _FadeRoute extends PageRouteBuilder {
   _FadeRoute({required this.child, required this.routeName})
       : super(
           settings: RouteSettings(name: routeName),
-          pageBuilder: (BuildContext context, Animation<double> animation,
-                  Animation<double> secondaryAnimation) =>
-              child,
-          transitionsBuilder: (BuildContext context,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
-                  Widget child) =>
+          pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) => child,
+          transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) =>
               FadeTransition(opacity: animation, child: child),
         );
 }

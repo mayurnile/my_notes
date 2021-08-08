@@ -102,9 +102,7 @@ class LoginScreen extends StatelessWidget {
                     if (value != null && value.trim().isEmpty) {
                       return 'This field cannot be empty !';
                     }
-                    if (value != null &&
-                        !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                            .hasMatch(value.trim())) {
+                    if (value != null && !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(value.trim())) {
                       return 'Please enter a valid email !';
                     }
                     return null;
@@ -126,13 +124,9 @@ class LoginScreen extends StatelessWidget {
                   ],
                   suffix: IconButton(
                     icon: Icon(
-                      _authProvider.showPassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      _authProvider.showPassword ? Icons.visibility_off : Icons.visibility,
                     ),
-                    color: _authProvider.authState == AuthState.error
-                        ? MyNotesTheme.fontLightColor
-                        : MyNotesTheme.fontDarkColor,
+                    color: _authProvider.authState == AuthState.error ? MyNotesTheme.fontLightColor : MyNotesTheme.fontDarkColor,
                     onPressed: _authProvider.toggleShowPassword,
                   ),
                   onSaved: (String? value) {
@@ -151,7 +145,9 @@ class LoginScreen extends StatelessWidget {
                 //login button
                 if (_authProvider.authState == AuthState.authenticating)
                   const Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(MyNotesTheme.primaryColor),
+                    ),
                   )
                 else
                   ElevatedButton(
@@ -181,9 +177,7 @@ class LoginScreen extends StatelessWidget {
               style: textTheme.bodyText1,
             ),
             InkWell(
-              onTap: () => locator
-                  .get<NavigationService>()
-                  .removeAllAndPush(signupRoute),
+              onTap: () => locator.get<NavigationService>().removeAllAndPush(signupRoute),
               key: const ValueKey('signup_button'),
               child: Text(
                 'Signup',

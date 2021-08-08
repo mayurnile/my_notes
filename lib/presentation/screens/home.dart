@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -55,8 +54,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return WillPopScope(
       onWillPop: () async {
         final NotesProvider _notesProvider = Get.find();
-        if (_notesProvider.notesState == NotesState.searched ||
-            _notesProvider.notesState == NotesState.searchEmpty) {
+        if (_notesProvider.notesState == NotesState.searched || _notesProvider.notesState == NotesState.searchEmpty) {
           locator.get<NavigationService>().removeAllAndPush(homeRoute);
           return false;
         }
@@ -67,14 +65,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           onTap: () => FocusScope.of(context).unfocus(),
           child: SafeArea(
             child: RefreshIndicator(
+              color: MyNotesTheme.primaryColor,
               onRefresh: () async {
                 final NotesProvider _notesProvider = Get.find();
                 final AuthProvider _authProvider = Get.find();
-                final User? user = _authProvider.firebaseAuth.currentUser;
-                final String userId = user!.uid;
+                final String? userId = _authProvider.userId;
                 _notesProvider.fetchAllNotes(
                   firestore: _notesProvider.firestore,
-                  userId: userId,
+                  userID: userId ?? '',
                 );
               },
               child: Padding(
@@ -119,7 +117,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             const Spacer(),
             //logout button
             if (_authProvider.authState == AuthState.authenticating)
-              const CircularProgressIndicator()
+              const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(MyNotesTheme.primaryColor),
+              )
             else
               InkWell(
                 onTap: () async {
@@ -128,9 +128,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                   );
 
                   if (result) {
-                    locator
-                        .get<NavigationService>()
-                        .removeAllAndPush(loginRoute);
+                    locator.get<NavigationService>().removeAllAndPush(loginRoute);
                   }
                 },
                 child: RotatedBox(
@@ -157,11 +155,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       initState: (_) {
         final NotesProvider _notesProvider = Get.find();
         final AuthProvider _authProvider = Get.find();
-        final User? user = _authProvider.firebaseAuth.currentUser;
-        final String userId = user!.uid;
+        final String? userId = _authProvider.userId;
         _notesProvider.fetchAllNotes(
           firestore: _notesProvider.firestore,
-          userId: userId,
+          userID: userId ?? '',
         );
       },
       builder: (NotesProvider _notesProvider) {
@@ -169,7 +166,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           return Padding(
             padding: EdgeInsets.only(top: screenSize.height * 0.32),
             child: const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(MyNotesTheme.primaryColor),
+              ),
             ),
           );
         } else if (_notesProvider.notesState == NotesState.loaded) {
@@ -197,7 +196,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           return Padding(
             padding: EdgeInsets.only(top: screenSize.height * 0.32),
             child: const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(MyNotesTheme.primaryColor),
+              ),
             ),
           );
         } else if (_notesProvider.notesState == NotesState.searched) {

@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthProvider extends GetxController {
   late FirebaseAuth _firebaseAuth;
 
+  String? _userId;
   String? _email;
   String? _password;
   String? _confirmPassword;
@@ -22,6 +23,7 @@ class AuthProvider extends GetxController {
     _firebaseAuth = FirebaseAuth.instance;
 
     //initialize variables
+    _userId = '';
     _email = '';
     _password = '';
     _confirmPassword = '';
@@ -32,6 +34,7 @@ class AuthProvider extends GetxController {
   }
 
   //setter
+  set userId(String? ud) => _userId = ud ?? '';
   set email(String? em) => _email = em ?? '';
   set password(String? pw) => _password = pw ?? '';
   set confirmPassword(String? cpw) => _confirmPassword = cpw ?? '';
@@ -47,6 +50,7 @@ class AuthProvider extends GetxController {
   }
 
   //getters
+  String? get userId => _userId;
   String? get email => _email;
   String? get password => _password;
   String? get confirmPassword => _confirmPassword;

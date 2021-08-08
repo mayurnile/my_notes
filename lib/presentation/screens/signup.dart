@@ -90,9 +90,7 @@ class SignupScreen extends StatelessWidget {
                     if (value != null && value.trim().isEmpty) {
                       return 'This field cannot be empty !';
                     }
-                    if (value != null &&
-                        !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$')
-                            .hasMatch(value.trim())) {
+                    if (value != null && !RegExp(r'^.+@[a-zA-Z]+\.{1}[a-zA-Z]+(\.{0,1}[a-zA-Z]+)$').hasMatch(value.trim())) {
                       return 'Please enter a valid email !';
                     }
                     return null;
@@ -114,20 +112,15 @@ class SignupScreen extends StatelessWidget {
                   ],
                   suffix: IconButton(
                     icon: Icon(
-                      _authProvider.showPassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      _authProvider.showPassword ? Icons.visibility_off : Icons.visibility,
                     ),
-                    color: _authProvider.authState == AuthState.error
-                        ? MyNotesTheme.fontLightColor
-                        : MyNotesTheme.fontDarkColor,
+                    color: _authProvider.authState == AuthState.error ? MyNotesTheme.fontLightColor : MyNotesTheme.fontDarkColor,
                     onPressed: _authProvider.toggleShowPassword,
                   ),
                   onSaved: (String? value) {
                     if (value != null) _authProvider.password = value.trim();
                   },
-                  onChanged: (String value) =>
-                      _authProvider.password = value.trim(),
+                  onChanged: (String value) => _authProvider.password = value.trim(),
                   validator: (String? value) {
                     if (value != null && value.trim().isEmpty) {
                       return 'This field cannot be empty !';
@@ -150,13 +143,9 @@ class SignupScreen extends StatelessWidget {
                   ],
                   suffix: IconButton(
                     icon: Icon(
-                      _authProvider.showConfirmPassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      _authProvider.showConfirmPassword ? Icons.visibility_off : Icons.visibility,
                     ),
-                    color: _authProvider.authState == AuthState.error
-                        ? MyNotesTheme.fontLightColor
-                        : MyNotesTheme.fontDarkColor,
+                    color: _authProvider.authState == AuthState.error ? MyNotesTheme.fontLightColor : MyNotesTheme.fontDarkColor,
                     onPressed: _authProvider.toggleShowConfirmPassword,
                   ),
                   onSaved: (String? value) {
@@ -167,8 +156,7 @@ class SignupScreen extends StatelessWidget {
                   validator: (String? value) {
                     if (value != null && value.trim().isEmpty) {
                       return 'This field cannot be empty !';
-                    } else if (value != null &&
-                        value.trim() != _authProvider.password) {
+                    } else if (value != null && value.trim() != _authProvider.password) {
                       return "Password and Confirm Password didn't match !";
                     }
                     return null;
@@ -181,7 +169,9 @@ class SignupScreen extends StatelessWidget {
                 //login button
                 if (_authProvider.authState == AuthState.authenticating)
                   const Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(MyNotesTheme.primaryColor),
+                    ),
                   )
                 else
                   ElevatedButton(
@@ -211,9 +201,7 @@ class SignupScreen extends StatelessWidget {
               style: textTheme.bodyText1,
             ),
             InkWell(
-              onTap: () => locator
-                  .get<NavigationService>()
-                  .removeAllAndPush(loginRoute),
+              onTap: () => locator.get<NavigationService>().removeAllAndPush(loginRoute),
               key: const ValueKey('login_button'),
               child: Text(
                 'Login',

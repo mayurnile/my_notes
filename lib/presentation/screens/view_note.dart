@@ -132,7 +132,8 @@ class ViewNoteScreen extends StatelessWidget {
           }
           _notesProvider.createNewNote(
             firestore: _notesProvider.firestore,
-            userId: _authProvider.email ?? '',
+            firebaseStorage: _notesProvider.firebaseStorage,
+            userID: _authProvider.userId ?? '',
             title: viewNote.title,
             description: viewNote.description,
             image: image,

@@ -15,6 +15,16 @@ class MyNotesTheme {
       accentColor: primaryColor,
       scaffoldBackgroundColor: Colors.white,
       fontFamily: 'Nunito',
+      accentIconTheme: const IconThemeData(
+        color: primaryColor,
+      ),
+      indicatorColor: primaryColor,
+      iconTheme: const IconThemeData(
+        color: primaryColor,
+      ),
+      textSelectionTheme: const TextSelectionThemeData(
+        cursorColor: fontDarkColor,
+      ),
       textTheme: const TextTheme(
         headline1: TextStyle(
           fontSize: 36.0,
